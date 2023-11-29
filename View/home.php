@@ -1,6 +1,19 @@
 <?php
+session_start();
+
 include './Model/homeBack.php';
+
+if (isset($_POST['submit'])) {
+    $_SESSION['message'] = "Booking Appointment Successfully";
+    header("Location: $_SERVER[PHP_SELF]");
+    exit();
+}
+
+$message = isset($_SESSION['message']) ? "<div class='alert alert-success'>{$_SESSION['message']}</div>" : null;
+unset($_SESSION['message']);
+
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -10,13 +23,7 @@ include './Model/homeBack.php';
     <title>SOS Clinic</title>
     <link rel="icon" type="image/x-icon" href="./View/favicon_io/favicon.ico">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-
-    <style>
-        .confirmed {
-            background-color: green !important;
-            color: white;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
@@ -29,10 +36,10 @@ include './Model/homeBack.php';
             <!-- <div class="navbar-collapse" id="navbarNav"> -->
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="#" style="font-size:18px;">Username | Birthday</a>
+                    <a class="nav-link" href="#" style="font-size:18px;">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" style="font-size:18px;">Home</a>
+                    <a class="nav-link" href="#" style="font-size:18px;">Username | <i class="fa fa-user"></i></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="index.php?page=login" style="font-size:18px;">Sign in</a>
@@ -51,7 +58,6 @@ include './Model/homeBack.php';
                 <center>
                     <br>
                     <h2>Clinical Appointment Options</h2>
-
                 </center>
                 <form id="doctor_select_form">
                     <div class="row">
@@ -66,24 +72,27 @@ include './Model/homeBack.php';
                         </div>
                     </div>
                 </form>
-
+                <div class="col-md-12">
+                    <?php echo isset($message) ? $message : ""; ?>
+                </div>
                 <table class="table table-bordered">
                     <tr class="table-success">
                         <?php
-                        $dt = new DateTime('today'); // Set initial date to today
+                        $timezone = new DateTimeZone('Asia/Ho_Chi_Minh');
+                        $dt = new DateTime('today', $timezone);
+                        $todayne = $dt->format('d M Y');
                         for ($i = 0; $i < 7; $i++) {
-                            if ($dt->format('d M Y') == date('d M Y')) {
+                            if ($dt->format('d M Y') == $todayne) {
                                 echo "<td style='background:yellow'>" . $dt->format('l') . "<br>" . $dt->format('d M Y') . "</td>\n";
                             } else {
                                 echo "<td>" . $dt->format('l') . "<br>" . $dt->format('d M Y') . "</td>\n";
                             }
-
                             $dt->modify('+1 day');
                         }
                         ?>
                     </tr>
                     <?php
-                    $dt = new DateTime('today'); // Reset $dt to today
+                    $dt = new DateTime('today', $timezone);
                     $timeslots = timeslots($duration, $cleanup, $start, $end);
                     foreach ($timeslots as $ts) {
                     ?>
@@ -91,7 +100,7 @@ include './Model/homeBack.php';
                             <?php
                             for ($i = 0; $i < 7; $i++) {
                             ?>
-                                <td><button class="btn btn-info btn-xs slot-btn" data-toggle="modal" data-target="#appointmentModal"><?php echo $ts; ?></button></td>
+                                <td><button class="btn btn-info btn-xs slot-btn book" data-timeslot="<?php echo $ts;  ?>"><?php echo $ts;  ?></button></td>
                             <?php
                                 $dt->modify('+1 day');
                             }
@@ -105,19 +114,44 @@ include './Model/homeBack.php';
         </div>
     </div>
 
-    <!-- Appointment Modal -->
-    <div class="modal fade" id="appointmentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+    <div class="modal" id="myModal">
+        <div class="modal-dialog">
             <div class="modal-content">
+
+                <!-- Modal Header -->
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Confirm Appointment</h5>
+                    <h4 class="modal-title">Booking Appointment Information</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal">&times;</button>
                 </div>
+
+                <!-- Modal body -->
                 <div class="modal-body">
-                    <p>Do you want to confirm this appointment?</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary confirm-appointment">Confirm</button>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form action="" method="post">
+                                <div class="form-group mb-2">
+                                    <label for="">Time</label>
+                                    <input required type="text" readonly name="timeslot" id="timeslot" class="form-control">
+                                </div>
+                                <div class="form-group mb-2">
+                                    <label for="">Patient</label>
+                                    <input required type="text" readonly name="Patientname" class="form-control">
+                                </div>
+                                <div class="form-group mb-2">
+                                    <label for="">Email</label>
+                                    <input required type="email" readonly name="email" class="form-control">
+                                </div>
+                                <div class="form-group mb-2">
+                                    <label for="">Doctor</label>
+                                    <input required type="text" readonly name="Doctorname" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-primary" type="submit" name="submit">Confirm</button>
+                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -127,30 +161,11 @@ include './Model/homeBack.php';
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
     <script>
-        $(document).ready(function() {
-            $('.slot-btn').click(function() {
-                $('#appointmentModal').modal('show');
-            });
-
-            $('#appointmentModal').on('hidden.bs.modal', function(e) {
-                // Check if 'Confirm' button was clicked
-                if ($('.modal-footer .confirm-appointment').data('clicked')) {
-                    $('.slot-btn:focus').addClass('confirmed');
-                }
-                // Reset the 'clicked' data attribute
-                $('.modal-footer .confirm-appointment').data('clicked', false);
-            });
-
-            $('.modal-footer .btn-secondary').click(function() {
-                $('#appointmentModal').modal('hide');
-            });
-
-            $('.modal-footer .confirm-appointment').click(function() {
-                // Set 'clicked' data attribute to true
-                $(this).data('clicked', true);
-                $('#appointmentModal').modal('hide');
-            });
-        });
+        $(".book").click(function() {
+            var timeslot = $(this).attr('data-timeslot');
+            $("#timeslot").val(timeslot);
+            $("#myModal").modal("show");
+        })
     </script>
 
 </body>
