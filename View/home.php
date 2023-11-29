@@ -7,7 +7,8 @@ include './Model/homeBack.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>calendar</title>
+    <title>SOS Clinic</title>
+    <link rel="icon" type="image/x-icon" href="./View/favicon_io/favicon.ico">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
     <style>
@@ -22,7 +23,7 @@ include './Model/homeBack.php';
     <nav class="navbar navbar-expand-lg navbar-light" style="background-color: lightgreen;">
         <div class="container-fluid d-flex justify-content-between align-items-center">
             <div class="navbar-collapse" id="navbarNav">
-                <a href="#"><img src="logomedical.jpg" class="rounded-circle" style="max-width: 50px; height: auto; margin-right:9px;"></a>
+                <a href="#"><img src="./View/logomedical.jpg" class="rounded-circle" style="max-width: 50px; height: auto; margin-right:9px;"></a>
                 <a class="navbar-brand" href="#">SOS Clinic</a>
             </div>
             <!-- <div class="navbar-collapse" id="navbarNav"> -->
@@ -34,7 +35,10 @@ include './Model/homeBack.php';
                     <a class="nav-link" href="#" style="font-size:18px;">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="login.html" style="font-size:18px;">Logout</a>
+                    <a class="nav-link" href="index.php?page=login" style="font-size:18px;">Sign in</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="index.php?page=register" style="font-size:18px;">Sign up</a>
                 </li>
             </ul>
             <!-- </div> -->
