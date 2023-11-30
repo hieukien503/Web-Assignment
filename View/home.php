@@ -98,10 +98,18 @@ unset($_SESSION['message']);
                     ?>
                         <tr>
                             <?php
+                            $dt = new DateTime('today', $timezone);
                             for ($i = 0; $i < 7; $i++) {
+                                if (checkExpire($ts) && ($dt->format('d M Y') == $todayne)) {
                             ?>
-                                <td><button class="btn btn-info btn-xs slot-btn book" data-timeslot="<?php echo $ts;  ?>"><?php echo $ts;  ?></button></td>
+                                    <td><button class="btn btn-light btn-xs slot-btn" data-timeslot="<?php echo $ts;  ?>"><?php echo $ts;  ?></button></td>
+                                <?php
+                                } else {
+                                ?>
+                                    <td><button class="btn btn-info btn-xs slot-btn book" data-timeslot="<?php echo $ts;  ?>"><?php echo $ts;  ?></button></td>
                             <?php
+                                }
+
                                 $dt->modify('+1 day');
                             }
                             ?>
