@@ -129,7 +129,7 @@ unset($_SESSION['message']);
                 <!-- Modal Header -->
                 <div class="modal-header">
                     <h4 class="modal-title">Booking Appointment Information</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal">&times;</button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
 
                 <!-- Modal body -->
