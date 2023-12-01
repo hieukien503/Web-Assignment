@@ -1,5 +1,4 @@
 <?php
-session_start();
 
 include './Model/homeBack.php';
 
@@ -38,15 +37,23 @@ unset($_SESSION['message']);
                 <li class="nav-item">
                     <a class="nav-link" href="#" style="font-size:18px;">Home</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" style="font-size:18px;">Username | <i class="fa fa-user"></i></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="index.php?page=login" style="font-size:18px;">Sign in</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="index.php?page=register" style="font-size:18px;">Sign up</a>
-                </li>
+                <?php
+                if (!isset($_SESSION['login'])) {
+                ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.php?page=login" style="font-size:18px;">Sign in</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.php?page=register" style="font-size:18px;">Sign up</a>
+                    </li>
+                <?php } else { ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" style="font-size:18px;"><?php echo $_SESSION['fullName']; ?> | <i class="fa fa-user"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./Model/logout_processing.php" style="font-size:18px;">Logout</a>
+                    </li>
+                <?php } ?>
             </ul>
             <!-- </div> -->
         </div>
@@ -58,20 +65,24 @@ unset($_SESSION['message']);
                 <center>
                     <br>
                     <h2>Clinical Appointment Options</h2>
+                    <br>
                 </center>
-                <form id="doctor_select_form">
-                    <div class="row">
-                        <div class="col-md-6 col-md-offset-3 form-group">
-                            <label style="font-size: 17px;font-weight:semi-bold;margin-left:3px;margin-bottom:3px;"> Select your doctor :</label>
+                <?php
+                if (isset($_SESSION['role'])){
+                if (!($_SESSION['role'])) {
+                ?>
+                    <form id="doctor_select_form">
+                        <div class="row">
+                            <div class="col-md-6 col-md-offset-3 form-group">
+                                <label style="font-size: 17px;font-weight:semi-bold;margin-left:3px;margin-bottom:3px;"> Select your doctor :</label>
 
-                            <select class="form-control" id="doctor_select" style="width: 200px;">
-                                <option value="doctor1"></option>
-                                <option value="doctor1">Doctor Goodbye</option>
-                            </select>
-                            <br>
+                                <select class="form-control" id="doctor_select" style="width: 200px;">
+                                    <option value="doctor1">Doctor Trinh Thu Thuy</option>
+                                </select>
+                                <br>
+                            </div>
                         </div>
-                    </div>
-                </form>
+                    </form> <?php }} ?>
                 <div class="col-md-12">
                     <?php echo isset($message) ? $message : ""; ?>
                 </div>
@@ -100,16 +111,54 @@ unset($_SESSION['message']);
                             <?php
                             $dt = new DateTime('today', $timezone);
                             for ($i = 0; $i < 7; $i++) {
-                                if (checkExpire($ts) && ($dt->format('d M Y') == $todayne)) {
+                                $curdate = $dt->format('Y-m-d');
+                                if (isset($_SESSION['login'])) {
+                                    if (checkExpire($ts) && ($dt->format('d M Y') == $todayne)) {
                             ?>
-                                    <td><button class="btn btn-light btn-xs slot-btn" data-timeslot="<?php echo $ts;  ?>"><?php echo $ts;  ?></button></td>
-                                <?php
-                                } else {
-                                ?>
-                                    <td><button class="btn btn-info btn-xs slot-btn book" data-timeslot="<?php echo $ts;  ?>"><?php echo $ts;  ?></button></td>
-                            <?php
-                                }
+                                        <td><button class="btn btn-light btn-xs slot-btn">Time Booking Expired</button></td>
+                                        <?php
+                                    } elseif (!checkTime($ts, $curdate)) {
+                                        if ($_SESSION['role']) {
+                                        ?>
+                                            <td><button class="btn btn-light btn-xs slot-btn doctorSet" data-timeslot="<?php echo $ts; ?>" date-time="<?php echo $curdate; ?>"><?php echo $ts;  ?></button></td>
+                                        <?php
+                                        } else {
+                                        ?>
+                                            <td><button class="btn btn-light btn-xs slot-btn"><?php echo $ts;  ?></button></td>
+                                            <?php }
+                                    } elseif (checkTime($ts, $curdate)) {
+                                        if ($_SESSION['role']) {
+                                            if (checkMyappointment2($ts, $curdate)) { ?>
+                                                <td><button class="btn btn-success btn-xs slot-btn doctorcancel" data-timeslot="<?php echo $ts; ?>" date-time="<?php echo $curdate; ?>">Your appointment</button></td>
+                                            <?php
+                                            } else {
+                                            ?>
+                                                <td><button class="btn btn-info btn-xs slot-btn doctorcancel" data-timeslot="<?php echo $ts; ?>" date-time="<?php echo $curdate; ?>"><?php echo $ts;  ?></button></td>
+                                            <?php }
+                                        } else {
+                                            if (checkMyappointment($ts, $curdate)) { ?>
+                                                <td><button class="btn btn-success btn-xs slot-btn patientcancel" data-timeslot="<?php echo $ts; ?>" date-time="<?php echo $curdate; ?>">Your appointment</button></td>
+                                            <?php
+                                            } elseif (checkOccupiedAppointment($ts, $curdate)) { ?>
+                                                <td><button class="btn btn-danger btn-xs slot-btn">Being Occupied</button></td>
+                                            <?php } else {
+                                            ?>
+                                                <td><button class="btn btn-info btn-xs slot-btn book" data-timeslot="<?php echo $ts; ?>" date-time="<?php echo $curdate; ?>"><?php echo $ts;  ?></button></td>
+                                        <?php
+                                            }
+                                        }
+                                    }
+                                } elseif (!isset($_SESSION['login'])) {
+                                    if (checkExpire($ts) && ($dt->format('d M Y') == $todayne)) {
+                                        ?>
+                                        <td><button class="btn btn-light btn-xs slot-btn">Time Booking Expired</button></td>
+                                    <?php
+                                    } else {
+                                    ?>
+                                        <td><button class="btn btn-light btn-xs slot-btn Lognotice"><?php echo $ts;  ?></button></td>
 
+                            <?php    }
+                                }
                                 $dt->modify('+1 day');
                             }
                             ?>
@@ -128,7 +177,7 @@ unset($_SESSION['message']);
 
                 <!-- Modal Header -->
                 <div class="modal-header">
-                    <h4 class="modal-title">Booking Appointment Information</h4>
+                    <h4 class="modal-title">Booking Appointment Confirmation</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
 
@@ -136,22 +185,22 @@ unset($_SESSION['message']);
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-12">
-                            <form action="" method="post">
+                            <form action="../Model/appointmentBooking.php" method="post">
+                                <div class="form-group mb-2">
+                                    <label for="">Date</label>
+                                    <input required type="text" readonly name="dateapp" id="dateapp" class="form-control">
+                                </div>
                                 <div class="form-group mb-2">
                                     <label for="">Time</label>
                                     <input required type="text" readonly name="timeslot" id="timeslot" class="form-control">
                                 </div>
                                 <div class="form-group mb-2">
                                     <label for="">Patient</label>
-                                    <input required type="text" readonly name="Patientname" class="form-control">
+                                    <input required type="text" readonly name="Patientname1" id="Patientname1" class="form-control">
                                 </div>
                                 <div class="form-group mb-2">
                                     <label for="">Email</label>
-                                    <input required type="email" readonly name="email" class="form-control">
-                                </div>
-                                <div class="form-group mb-2">
-                                    <label for="">Doctor</label>
-                                    <input required type="text" readonly name="Doctorname" class="form-control">
+                                    <input required type="email" readonly name="email" id="email" class="form-control">
                                 </div>
                                 <div class="form-group">
                                     <button class="btn btn-primary" type="submit" name="submit">Confirm</button>
@@ -165,14 +214,197 @@ unset($_SESSION['message']);
         </div>
     </div>
 
+
+    <div class="modal" id="DoctorModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Setting Appointment Confirmation</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form action="../Model/appointmentAdding.php" method="post">
+                                <div class="form-group mb-2">
+                                    <label for="">Date</label>
+                                    <input required type="text" readonly name="dateappoint" id="dateappoint" class="form-control">
+                                </div>
+                                <div class="form-group mb-2">
+                                    <label for="">Time</label>
+                                    <input required type="text" readonly name="timeslotdoctor" id="timeslotdoctor" class="form-control">
+                                </div>
+                                <div class="form-group mb-2">
+                                    <label for=""> From Doctor</label>
+                                    <input required type="text" readonly name="Doctorinname" id="Doctorinname" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-primary" type="submit" name="confirm">Confirm</button>
+                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="DoctorModal2">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Appointment Cancelation</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form action="../Model/appointmentDoctorCancel.php" method="post">
+                                <div class="form-group mb-2">
+                                    <label for="">Date</label>
+                                    <input required type="text" readonly name="dateappoint2" id="dateappoint2" class="form-control">
+                                </div>
+                                <div class="form-group mb-2">
+                                    <label for="">Time</label>
+                                    <input required type="text" readonly name="timeslotdoctor2" id="timeslotdoctor2" class="form-control">
+                                </div>
+                                <div class="form-group mb-2">
+                                    <label for=""> From Doctor</label>
+                                    <input required type="text" readonly name="Doctorinname2" id="Doctorinname2" class="form-control">
+                                </div>
+                                <div class="form-group mb-2">
+                                    <label for="">Do you want to cancel this appointment ?</label>
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-primary" type="submit" name="confirm">Confirm</button>
+                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="NoticeModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Please sign in to make an appointment !</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form action="" method="post">
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Okey, I got it !</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="PatientModal2">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Appointment Cancelation</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form action="../Model/appointmentPatientCancel.php" method="post">
+                                <div class="form-group mb-2">
+                                    <label for="">Date</label>
+                                    <input required type="text" readonly name="appointdate" id="appointdate" class="form-control">
+                                </div>
+                                <div class="form-group mb-2">
+                                    <label for="">Time</label>
+                                    <input required type="text" readonly name="timeslotpatient" id="timeslotpatient" class="form-control">
+                                </div>
+                                <div class="form-group mb-2">
+                                    <label for=""> Patient Name</label>
+                                    <input required type="text" readonly name="patientname" id="patientname" class="form-control">
+                                </div>
+                                <div class="form-group mb-2">
+                                    <label for="">Do you want to cancel this appointment ?</label>
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-primary" type="submit" name="patientcancel">Confirm</button>
+                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
     <script>
+        // patient
         $(".book").click(function() {
             var timeslot = $(this).attr('data-timeslot');
+            var date = $(this).attr('date-time');
+            $("#dateapp").val(date);
             $("#timeslot").val(timeslot);
+            $("#Patientname1").val("<?php echo $_SESSION['fullName']; ?> ");
+            $("#email").val("<?php echo $_SESSION['email']; ?> ");
             $("#myModal").modal("show");
+        })
+        $(".patientcancel").click(function() {
+            var timeslot = $(this).attr('data-timeslot');
+            var date = $(this).attr('date-time');
+            $("#timeslotpatient").val(timeslot);
+            $("#appointdate").val(date);
+            $("#patientname").val("<?php echo $_SESSION['fullName']; ?> ");
+            $("#PatientModal2").modal("show");
+        })
+        // doctor
+        $(".doctorSet").click(function() {
+            var timeslot = $(this).attr('data-timeslot');
+            var date = $(this).attr('date-time');
+            $("#timeslotdoctor").val(timeslot);
+            $("#dateappoint").val(date);
+            $("#Doctorinname").val("<?php echo $_SESSION['fullName']; ?> ");
+            $("#DoctorModal").modal("show");
+        })
+        $(".doctorcancel").click(function() {
+            var timeslot = $(this).attr('data-timeslot');
+            var date = $(this).attr('date-time');
+            $("#timeslotdoctor2").val(timeslot);
+            $("#dateappoint2").val(date);
+            $("#Doctorinname2").val("<?php echo $_SESSION['fullName']; ?> ");
+            $("#DoctorModal2").modal("show");
+        })
+        //login notice
+        $(".Lognotice").click(function() {
+            $("#NoticeModal").modal("show");
         })
     </script>
 
