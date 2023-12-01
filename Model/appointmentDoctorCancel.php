@@ -1,6 +1,6 @@
 <?php
 
-
+session_start();
 function deleteAppointment($date,$timeslot)
 { 
     include("connectDB.php");
@@ -12,6 +12,7 @@ function deleteAppointment($date,$timeslot)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['dateappoint2']) && isset($_POST['timeslotdoctor2'])) {
         if (deleteAppointment($_POST['dateappoint2'], $_POST['timeslotdoctor2'])) {
+            $_SESSION['delete'] = true;
             header("Location: ../index.php");
             exit();
         } else {

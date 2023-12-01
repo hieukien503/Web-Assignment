@@ -33,33 +33,54 @@ function checkExpire($slot)
     return $dt >= $startTime;
 }
 
-function checkTime($ts,$dt) {
+function checkTime($ts, $dt)
+{
     include("connectDB.php");
     $sql = "SELECT * FROM appointment WHERE appointment_timeslot='$ts' AND appointment_date = '$dt'";
     $result = $conn->query($sql);
-    if ($result->num_rows > 0) return true; 
+    if ($result->num_rows > 0) return true;
     return false;
 }
-function checkMyappointment($ts,$dt) {
+function checkMyappointment($ts, $dt)
+{
     include("connectDB.php");
     $sql = "SELECT * FROM appointment WHERE appointment_timeslot='$ts' AND appointment_date = '$dt' AND appointment_status ='O' AND appointment_patientID ='{$_SESSION['id']}'";
     $result = $conn->query($sql);
-    if ($result->num_rows > 0) return true; 
+    if ($result->num_rows > 0) return true;
     return false;
 }
-function checkMyappointment2($ts,$dt) {
+function checkMyappointment2($ts, $dt)
+{
     include("connectDB.php");
     $sql = "SELECT * FROM appointment WHERE appointment_timeslot='$ts' AND appointment_date = '$dt' AND appointment_status ='O' AND appointment_doctorID ='{$_SESSION['id']}'";
     $result = $conn->query($sql);
-    if ($result->num_rows > 0) return true; 
+    if ($result->num_rows > 0) return true;
     return false;
 }
 // this function is to avoid checking null patientID
-function checkOccupiedAppointment($ts, $dt){
+function checkOccupiedAppointment($ts, $dt)
+{
     include("connectDB.php");
     $sql = "SELECT * FROM appointment WHERE appointment_timeslot='$ts' AND appointment_date = '$dt' AND appointment_status ='O'";
     $result = $conn->query($sql);
-    if ($result->num_rows > 0) return true; 
+    if ($result->num_rows > 0) return true;
     return false;
+}
+
+function getPatientName($ts, $dt)
+{
+    include("connectDB.php");
+    $sql = "SELECT * FROM appointment WHERE appointment_timeslot='$ts' AND appointment_date = '$dt'";
+    $result = $conn->query($sql);
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $sql2 = "SELECT * FROM users WHERE userID='{$row['appointment_patientID']}'";
+        $result2 = $conn->query($sql2);
+        if ($result2->num_rows > 0) {
+            $row2 = $result2->fetch_assoc();
+                return $row2['fullName'];
+        }
+    }
+    return "No Patient";
 }
 ?>

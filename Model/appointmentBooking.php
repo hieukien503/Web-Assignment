@@ -13,6 +13,7 @@ function bookingAppointment($date,$timeslot)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['dateapp']) && isset($_POST['timeslot'])) {
         if (bookingAppointment($_POST['dateapp'], $_POST['timeslot'])) {
+            $_SESSION['successful'] = true;
             header("Location: ../index.php");
             exit();
         } else {

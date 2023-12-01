@@ -1,16 +1,5 @@
 <?php
-
 include './Model/homeBack.php';
-
-if (isset($_POST['submit'])) {
-    $_SESSION['message'] = "Booking Appointment Successfully";
-    header("Location: $_SERVER[PHP_SELF]");
-    exit();
-}
-
-$message = isset($_SESSION['message']) ? "<div class='alert alert-success'>{$_SESSION['message']}</div>" : null;
-unset($_SESSION['message']);
-
 ?>
 
 <!DOCTYPE html>
@@ -84,7 +73,11 @@ unset($_SESSION['message']);
                         </div>
                     </form> <?php }} ?>
                 <div class="col-md-12">
-                    <?php echo isset($message) ? $message : ""; ?>
+                <?php 
+                    if(isset($_SESSION['successful'])) {if($_SESSION['successful']) {echo "<div class='alert alert-success'>Booking Appointment Successfully</div>";$_SESSION['successful'] = false; }}  
+                    if(isset($_SESSION['sucful'])) {if($_SESSION['sucful']) {echo "<div class='alert alert-success'>Set up Appointment Successfully</div>";$_SESSION['sucful'] = false; }}
+                    if(isset($_SESSION['delete'])) {if($_SESSION['delete']) {echo "<div class='alert alert-danger'>Cancel Appointment Successfully</div>";$_SESSION['delete'] = false; }}
+                    ?>
                 </div>
                 <table class="table table-bordered">
                     <tr class="table-success">
@@ -129,11 +122,11 @@ unset($_SESSION['message']);
                                     } elseif (checkTime($ts, $curdate)) {
                                         if ($_SESSION['role']) {
                                             if (checkMyappointment2($ts, $curdate)) { ?>
-                                                <td><button class="btn btn-success btn-xs slot-btn doctorcancel" data-timeslot="<?php echo $ts; ?>" date-time="<?php echo $curdate; ?>">Your appointment</button></td>
+                                                <td><button class="btn btn-success btn-xs slot-btn doctorcancel" data-timeslot="<?php echo $ts; ?>" date-time="<?php echo $curdate; ?>" patient-name="<?php echo getPatientName($ts,$curdate); ?>">Your appointment</button></td>
                                             <?php
                                             } else {
                                             ?>
-                                                <td><button class="btn btn-info btn-xs slot-btn doctorcancel" data-timeslot="<?php echo $ts; ?>" date-time="<?php echo $curdate; ?>"><?php echo $ts;  ?></button></td>
+                                                <td><button class="btn btn-info btn-xs slot-btn doctorcancel" data-timeslot="<?php echo $ts; ?>" date-time="<?php echo $curdate; ?>" patient-name="<?php echo getPatientName($ts,$curdate); ?>"><?php echo $ts;  ?></button></td>
                                             <?php }
                                         } else {
                                             if (checkMyappointment($ts, $curdate)) { ?>
@@ -201,6 +194,10 @@ unset($_SESSION['message']);
                                 <div class="form-group mb-2">
                                     <label for="">Email</label>
                                     <input required type="email" readonly name="email" id="email" class="form-control">
+                                </div>
+                                <div class="form-group mb-2">
+                                    <label for="">Your Doctor</label>
+                                    <input required type="text" readonly name="doctr" id="doctr" class="form-control">
                                 </div>
                                 <div class="form-group">
                                     <button class="btn btn-primary" type="submit" name="submit">Confirm</button>
@@ -278,11 +275,15 @@ unset($_SESSION['message']);
                                     <input required type="text" readonly name="timeslotdoctor2" id="timeslotdoctor2" class="form-control">
                                 </div>
                                 <div class="form-group mb-2">
-                                    <label for=""> From Doctor</label>
+                                    <label for=""> Dear Doctor</label>
                                     <input required type="text" readonly name="Doctorinname2" id="Doctorinname2" class="form-control">
                                 </div>
                                 <div class="form-group mb-2">
-                                    <label for="">Do you want to cancel this appointment ?</label>
+                                    <label for=""> You have patient</label>
+                                    <input required type="text" readonly name="patientinname2" id="patientinname2" class="form-control">
+                                </div>
+                                <div class="form-group mb-2">
+                                    <label for="">Do you still want to cancel this appointment ?</label>
                                 </div>
                                 <div class="form-group">
                                     <button class="btn btn-primary" type="submit" name="confirm">Confirm</button>
@@ -346,8 +347,12 @@ unset($_SESSION['message']);
                                     <input required type="text" readonly name="timeslotpatient" id="timeslotpatient" class="form-control">
                                 </div>
                                 <div class="form-group mb-2">
-                                    <label for=""> Patient Name</label>
+                                    <label for=""> Dear</label>
                                     <input required type="text" readonly name="patientname" id="patientname" class="form-control">
+                                </div>
+                                <div class="form-group mb-2">
+                                    <label for=""> Your Doctor</label>
+                                    <input required type="text" readonly name="doctr2" id="doctr2" class="form-control">
                                 </div>
                                 <div class="form-group mb-2">
                                     <label for="">Do you want to cancel this appointment ?</label>
@@ -375,6 +380,7 @@ unset($_SESSION['message']);
             $("#timeslot").val(timeslot);
             $("#Patientname1").val("<?php echo $_SESSION['fullName']; ?> ");
             $("#email").val("<?php echo $_SESSION['email']; ?> ");
+            $("#doctr").val("Trinh Thu Thuy");
             $("#myModal").modal("show");
         })
         $(".patientcancel").click(function() {
@@ -382,6 +388,7 @@ unset($_SESSION['message']);
             var date = $(this).attr('date-time');
             $("#timeslotpatient").val(timeslot);
             $("#appointdate").val(date);
+            $("#doctr2").val("Trinh Thu Thuy");
             $("#patientname").val("<?php echo $_SESSION['fullName']; ?> ");
             $("#PatientModal2").modal("show");
         })
@@ -397,9 +404,11 @@ unset($_SESSION['message']);
         $(".doctorcancel").click(function() {
             var timeslot = $(this).attr('data-timeslot');
             var date = $(this).attr('date-time');
+            var pName = $(this).attr('patient-name');
             $("#timeslotdoctor2").val(timeslot);
             $("#dateappoint2").val(date);
             $("#Doctorinname2").val("<?php echo $_SESSION['fullName']; ?> ");
+            $("#patientinname2").val(pName);
             $("#DoctorModal2").modal("show");
         })
         //login notice

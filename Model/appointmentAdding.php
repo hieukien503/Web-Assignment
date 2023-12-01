@@ -14,6 +14,7 @@ function addingAppointment($date,$timeslot)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['dateappoint']) && isset($_POST['timeslotdoctor'])) {
         if (addingAppointment($_POST['dateappoint'], $_POST['timeslotdoctor'])) {
+            $_SESSION['sucful'] = true;
             header("Location: ../index.php");
             exit();
         } else {
