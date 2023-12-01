@@ -1,3 +1,4 @@
+<!-- trong file này bởi vì e chưa tạo hashed password trong register_processing nên e ms check kiểu chưa đc hash thui -->
 <?php
 
 session_start();
