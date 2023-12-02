@@ -11,7 +11,7 @@ CREATE TABLE Users (
     userID INT AUTO_INCREMENT PRIMARY KEY,
     fullName VARCHAR(256) UNIQUE,
     email VARCHAR(256) NOT NULL,
-    password VARCHAR(1024) NOT NULL,
+    password TEXT NOT NULL,
     role BOOLEAN DEFAULT 0
 );
 

@@ -3,14 +3,14 @@
 
 session_start();
 
-function loginVerification($email,$passwording)
-{ 
+function loginVerification($email, $passwording)
+{
     include("connectDB.php");
-    $sql = "SELECT * FROM users WHERE email='$email'";
+    $sql = "SELECT * FROM users WHERE email = '$email'";
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
-        if ($passwording == $row['password']) {
+        if ($passwording === $row['password']) {
             if ($row['role'] == '0') $_SESSION['role'] = false;
             else $_SESSION['role'] = true;
             $_SESSION['fullName'] = $row['fullName'];
@@ -21,21 +21,18 @@ function loginVerification($email,$passwording)
         }
     }
     $conn->close();
+    echo '<script type=text/javascript">window.alert("Invalid username or password")</script>';
     return false;
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['email']) && isset($_POST['password'])) {
-        if (loginVerification($_POST['email'], $_POST['password'])) {
+    if (isset($_POST['login'])) {
+        $hash_pwd = hash('sha512', $_POST['password']);
+        if (loginVerification($_POST['email'], $hash_pwd)) {
             $_SESSION['login'] = true;
-            header("Location: ../index.php");
-            exit();
+            echo '<script type=text/javascript">window.location.replace("../index.php?page=home")</script>';
         } else {
-            echo "<script>window.alert(Invalid username or password)</script>";
-            header("Location: ../login.php");
+            echo '<script type=text/javascript">window.location.replace("../index.php?page=login")</script>';
         }
-    } else {
-        echo "<script>Please provide both username and password</script>";
-        header("Location: ../login.php");
     }
 }
 ?>
