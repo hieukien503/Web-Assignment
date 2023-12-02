@@ -52,7 +52,7 @@ $init_db->addAccount('Dr. Jackson', 'jack@gmail.com', hash('sha512', '12345678')
 $init_db->addAccount('Dr. Steve', 'khoa.lesteve@hcmut.edu.com', hash('sha512', '12345678'), 1);
 
 // Add a few patients
-$init_db->addAccount('Duong Van Hao', 'dvhao@gmail.vn', hash('sha512', '12345678'), 0);
+$init_db->addAccount('Duong Van Hao', 'dvhao@gmail.com', hash('sha512', '12345678'), 0);
 $init_db->addAccount('Lai Van Minh', 'minh@gmail.com', hash('sha512', '12345678'), 0);
 $init_db->addAccount('Lam Phuong', 'phuong@saigonair.com', hash('sha512', '12345678'), 0);
 
