@@ -14,7 +14,7 @@ class InitDatabase
          * The very first connection to initialize the database schema.
          * Query content is sourced from DB.SQL
          */
-        $db_schema_query = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/dashboard/Web-Assignment-main/Web-Assignment-main/Model/DB.SQL");
+        $db_schema_query = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/dashboard/Web-Assignment-main/Model/DB.SQL");
 
         $init_conn = new mysqli($this->servername, $this->username, $this->password);
         $init_conn->multi_query($db_schema_query);
@@ -29,14 +29,16 @@ class InitDatabase
     public function addAccount($fullname, $mail, $password, $role)
     {
         // Check if account exists or not;
-        if ($this->conn->query("SELECT * FROM users WHERE email = '$mail'")->num_rows > 0) return;
+        if ($this->conn->query("SELECT * FROM users WHERE email = '$mail'")->num_rows > 0)
+            return;
 
         $hash_pwd = hash('sha512', $password);
         $sql = "INSERT INTO users (fullName, email, password,role) VALUES ('$fullname', '$mail', '$hash_pwd','$role')";
         $result = $this->conn->query($sql);
     }
 
-    public function closeConnection() {
+    public function closeConnection()
+    {
         $this->conn->close();
     }
 }
