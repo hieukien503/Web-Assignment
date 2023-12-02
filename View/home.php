@@ -1,5 +1,17 @@
 <?php
 include './Model/homeBack.php';
+if (isset($_POST['doctorIDhello'])) {
+    // AJAX request with doctorIDhello parameter
+    $selectedDoctorID = $_POST['doctorIDhello'];
+    $_SESSION['doctorID'] = $selectedDoctorID;
+    // Log or perform other actions
+    error_log('Received doctorIDhello: ' . $selectedDoctorID);
+    // Update the session variable if needed
+    // You can perform additional actions here based on the AJAX request
+    // Send a response if needed
+    echo json_encode(['success' => $selectedDoctorID]);
+    exit; // Terminate the script after sending the response
+}
 ?>
 
 <!DOCTYPE html>
@@ -57,22 +69,38 @@ include './Model/homeBack.php';
                     <br>
                 </center>
                 <?php
-                if (isset($_SESSION['role'])) {
-                    if (!($_SESSION['role'])) {
+                if (isset($_SESSION['role']) && $_SESSION['role'] == 0) { // Check if the user is a patient
+
+                    $result = getListDoctor();
+
+                    if ($result->num_rows > 0) {
                 ?>
                         <form id="doctor_select_form">
                             <div class="row">
                                 <div class="col-md-6 col-md-offset-3 form-group">
-                                    <label style="font-size: 17px;font-weight:semi-bold;margin-left:3px;margin-bottom:3px;"> Select your doctor :</label>
+                                    <label style="font-size: 17px; font-weight:semi-bold; margin-left:3px; margin-bottom:3px;">Select your doctor :</label>
 
                                     <select class="form-control" id="doctor_select" style="width: 200px;">
-                                        <option value="doctor1">Doctor Trinh Thu Thuy</option>
+                                        <?php if(isset($_SESSION['doctorID'])) { ?>
+                                            <option class="optionDoctor" value="<?php echo $_SESSION['doctorID']; ?>"><?php echo getDoctorName(); ?></option>
+                                       <?php }?>
+                                        <?php while ($row = $result->fetch_assoc()) {
+                                            if(isset($_SESSION['doctorID'])){if ($_SESSION['doctorID'] != $row['userID']){
+                                        ?>
+                                            <option class="optionDoctor" value="<?php echo $row['userID']; ?>"><?php echo $row['fullName']; ?></option>
+                                        <?php }}
+                                        if(!isset($_SESSION['doctorID'])){?>
+                                               <option class="optionDoctor" value="<?php echo $row['userID']; ?>"><?php echo $row['fullName']; ?></option>  
+                                       <?php }} ?>
                                     </select>
                                     <br>
                                 </div>
                             </div>
-                        </form> <?php }
-                        } ?>
+                        </form>
+                <?php
+                    }
+                }
+                ?>
                 <div class="col-md-12">
                     <?php
                     if (isset($_SESSION['successful'])) {
@@ -93,88 +121,96 @@ include './Model/homeBack.php';
                             $_SESSION['delete'] = false;
                         }
                     }
+                    if (isset($_SESSION['notgud'])) {
+                        if ($_SESSION['notgud']) {
+                            echo "<div class='alert alert-danger'>You cannot meet 2 doctor at a time !!!</div>";
+                            $_SESSION['notgud'] = false;
+                        }
+                    }
                     ?>
                 </div>
-                <div style="overflow: scroll"><table class="table table-bordered">
-                    <tr class="table-success">
-                        <?php
-                        $timezone = new DateTimeZone('Asia/Ho_Chi_Minh');
-                        $dt = new DateTime('today', $timezone);
-                        $todayne = $dt->format('d M Y');
-                        for ($i = 0; $i < 7; $i++) {
-                            if ($dt->format('d M Y') == $todayne) {
-                                echo "<td style='background:yellow'>" . $dt->format('l') . "<br>" . $dt->format('d M Y') . "</td>\n";
-                            } else {
-                                echo "<td>" . $dt->format('l') . "<br>" . $dt->format('d M Y') . "</td>\n";
-                            }
-                            $dt->modify('+1 day');
-                        }
-                        ?>
-                    </tr>
-                    <?php
-                    $dt = new DateTime('today', $timezone);
-                    $timeslots = timeslots($duration, $cleanup, $start, $end);
-                    foreach ($timeslots as $ts) {
-                    ?>
-                        <tr>
+                <div style="overflow: scroll">
+                    <table class="table table-bordered">
+                        <tr class="table-success">
                             <?php
+                            $timezone = new DateTimeZone('Asia/Ho_Chi_Minh');
                             $dt = new DateTime('today', $timezone);
+                            $todayne = $dt->format('d M Y');
                             for ($i = 0; $i < 7; $i++) {
-                                $curdate = $dt->format('Y-m-d');
-                                if (isset($_SESSION['login'])) {
-                                    if (checkExpire($ts) && ($dt->format('d M Y') == $todayne)) {
-                            ?>
-                                        <td><button class="btn btn-light btn-xs slot-btn">Time Booking Expired</button></td>
-                                        <?php
-                                    } elseif (!checkTime($ts, $curdate)) {
-                                        if ($_SESSION['role']) {
-                                        ?>
-                                            <td><button class="btn btn-light btn-xs slot-btn doctorSet" data-timeslot="<?php echo $ts; ?>" date-time="<?php echo $curdate; ?>"><?php echo $ts;  ?></button></td>
-                                        <?php
-                                        } else {
-                                        ?>
-                                            <td><button class="btn btn-light btn-xs slot-btn"><?php echo $ts;  ?></button></td>
-                                            <?php }
-                                    } elseif (checkTime($ts, $curdate)) {
-                                        if ($_SESSION['role']) {
-                                            if (checkMyappointment2($ts, $curdate)) { ?>
-                                                <td><button class="btn btn-success btn-xs slot-btn doctorcancel" data-timeslot="<?php echo $ts; ?>" date-time="<?php echo $curdate; ?>" patient-name="<?php echo getPatientName($ts, $curdate); ?>">Your appointment</button></td>
-                                            <?php
-                                            } else {
-                                            ?>
-                                                <td><button class="btn btn-info btn-xs slot-btn doctorcancel" data-timeslot="<?php echo $ts; ?>" date-time="<?php echo $curdate; ?>" patient-name="<?php echo getPatientName($ts, $curdate); ?>"><?php echo $ts;  ?></button></td>
-                                            <?php }
-                                        } else {
-                                            if (checkMyappointment($ts, $curdate)) { ?>
-                                                <td><button class="btn btn-success btn-xs slot-btn patientcancel" data-timeslot="<?php echo $ts; ?>" date-time="<?php echo $curdate; ?>">Your appointment</button></td>
-                                            <?php
-                                            } elseif (checkOccupiedAppointment($ts, $curdate)) { ?>
-                                                <td><button class="btn btn-danger btn-xs slot-btn">Being Occupied</button></td>
-                                            <?php } else {
-                                            ?>
-                                                <td><button class="btn btn-info btn-xs slot-btn book" data-timeslot="<?php echo $ts; ?>" date-time="<?php echo $curdate; ?>"><?php echo $ts;  ?></button></td>
-                                        <?php
-                                            }
-                                        }
-                                    }
-                                } elseif (!isset($_SESSION['login'])) {
-                                    if (checkExpire($ts) && ($dt->format('d M Y') == $todayne)) {
-                                        ?>
-                                        <td><button class="btn btn-light btn-xs slot-btn">Time Booking Expired</button></td>
-                                    <?php
-                                    } else {
-                                    ?>
-                                        <td><button class="Notice-Login btn btn-light btn-xs slot-btn"><?php echo $ts;  ?></button></td>
-                            <?php    }
+                                if ($dt->format('d M Y') == $todayne) {
+                                    echo "<td style='background:yellow'>" . $dt->format('l') . "<br>" . $dt->format('d M Y') . "</td>\n";
+                                } else {
+                                    echo "<td>" . $dt->format('l') . "<br>" . $dt->format('d M Y') . "</td>\n";
                                 }
                                 $dt->modify('+1 day');
                             }
                             ?>
                         </tr>
-                    <?php
-                    }
-                    ?>
-                </table></div>
+                        <?php
+                        $dt = new DateTime('today', $timezone);
+                        $timeslots = timeslots($duration, $cleanup, $start, $end);
+                        foreach ($timeslots as $ts) {
+                        ?>
+                            <tr>
+                                <?php
+                                $dt = new DateTime('today', $timezone);
+                                for ($i = 0; $i < 7; $i++) {
+                                    $curdate = $dt->format('Y-m-d');
+                                    if (isset($_SESSION['login'])) {
+                                        if (checkExpire($ts) && ($dt->format('d M Y') == $todayne)) {
+                                ?>
+                                            <td><button class="btn btn-light btn-xs slot-btn">Time Booking Expired</button></td>
+                                            <?php
+                                        } elseif (!checkTime($ts, $curdate)) {
+                                            if ($_SESSION['role']) {
+                                            ?>
+                                                <td><button class="btn btn-light btn-xs slot-btn doctorSet" data-timeslot="<?php echo $ts; ?>" date-time="<?php echo $curdate; ?>"><?php echo $ts;  ?></button></td>
+                                            <?php
+                                            } else {
+                                            ?>
+                                                <td><button class="btn btn-light btn-xs slot-btn"><?php echo $ts;  ?></button></td>
+                                                <?php }
+                                        } elseif (checkTime($ts, $curdate)) {
+                                            if ($_SESSION['role']) {
+                                                if (checkMyappointment2($ts, $curdate)) { ?>
+                                                    <td><button class="btn btn-success btn-xs slot-btn doctorcancel" data-timeslot="<?php echo $ts; ?>" date-time="<?php echo $curdate; ?>" patient-name="<?php echo getPatientName($ts, $curdate); ?>">Your appointment</button></td>
+                                                <?php
+                                                } else {
+                                                ?>
+                                                    <td><button class="btn btn-info btn-xs slot-btn doctorcancel" data-timeslot="<?php echo $ts; ?>" date-time="<?php echo $curdate; ?>" patient-name="<?php echo getPatientName($ts, $curdate); ?>"><?php echo $ts;  ?></button></td>
+                                                <?php }
+                                            } else {
+                                                if (checkMyappointment($ts, $curdate)) { ?>
+                                                    <td><button class="btn btn-success btn-xs slot-btn patientcancel" data-timeslot="<?php echo $ts; ?>" date-time="<?php echo $curdate; ?>">Your appointment</button></td>
+                                                <?php
+                                                } elseif (checkOccupiedAppointment($ts, $curdate)) { ?>
+                                                    <td><button class="btn btn-danger btn-xs slot-btn">Being Occupied</button></td>
+                                                <?php } else {
+                                                ?>
+                                                    <td><button class="btn btn-info btn-xs slot-btn book" data-timeslot="<?php echo $ts; ?>" date-time="<?php echo $curdate; ?>"><?php echo $ts; ?></button></td>
+                                            <?php
+                                                }
+                                            }
+                                        }
+                                    } elseif (!isset($_SESSION['login'])) {
+                                        if (checkExpire($ts) && ($dt->format('d M Y') == $todayne)) {
+                                            ?>
+                                            <td><button class="btn btn-light btn-xs slot-btn">Time Booking Expired</button></td>
+                                        <?php
+                                        } else {
+                                        ?>
+                                            <td><button class="Notice-Login btn btn-light btn-xs slot-btn"><?php echo $ts;  ?></button></td>
+                                <?php    }
+                                    }
+                                    $dt->modify('+1 day');
+                                }
+                                ?>
+                            </tr>
+                        <?php
+                        }
+                        ?>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -383,9 +419,8 @@ include './Model/homeBack.php';
             </div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script>
         //login notice
 
@@ -398,9 +433,9 @@ include './Model/homeBack.php';
             var date = $(this).attr('date-time');
             $("#dateapp").val(date);
             $("#timeslot").val(timeslot);
-            $("#Patientname1").val("<?php if (isset($_SESSION['fullName'])) { echo $_SESSION['fullName']; } else echo "Not found";?> ");
-            $("#email").val("<?php if (isset($_SESSION['email'])) { echo $_SESSION['email']; } else echo "Not found";?> ");
-            $("#doctr").val("Trinh Thu Thuy");
+            $("#Patientname1").val("<?php if (isset($_SESSION['fullName'])) { echo $_SESSION['fullName']; } else echo "Not found"; ?> ");
+            $("#email").val("<?php if (isset($_SESSION['email'])) { echo $_SESSION['email'];} else echo "Not found"; ?> ");
+            $("#doctr").val("<?php echo getDoctorName();?>");
             $("#myModal").modal("show");
         })
         $(".patientcancel").click(function() {
@@ -408,8 +443,8 @@ include './Model/homeBack.php';
             var date = $(this).attr('date-time');
             $("#timeslotpatient").val(timeslot);
             $("#appointdate").val(date);
-            $("#doctr2").val("Trinh Thu Thuy");
-            $("#patientname").val("<?php if (isset($_SESSION['fullName'])) { echo $_SESSION['fullName']; } else echo "Not found";?> ");
+            $("#doctr2").val("<?php echo getDoctorName();?>");
+            $("#patientname").val("<?php if (isset($_SESSION['fullName'])) { echo $_SESSION['fullName']; } else echo "Not found"; ?> ");
             $("#PatientModal2").modal("show");
         })
         // doctor
@@ -418,7 +453,7 @@ include './Model/homeBack.php';
             var date = $(this).attr('date-time');
             $("#timeslotdoctor").val(timeslot);
             $("#dateappoint").val(date);
-            $("#Doctorinname").val("<?php if (isset($_SESSION['fullName'])) { echo $_SESSION['fullName']; } else echo "Not found";?> ");
+            $("#Doctorinname").val("<?php if (isset($_SESSION['fullName'])) { echo $_SESSION['fullName']; } else echo "Not found"; ?> ");
             $("#DoctorModal").modal("show");
         })
         $(".doctorcancel").click(function() {
@@ -427,12 +462,29 @@ include './Model/homeBack.php';
             var pName = $(this).attr('patient-name');
             $("#timeslotdoctor2").val(timeslot);
             $("#dateappoint2").val(date);
-            $("#Doctorinname2").val("<?php if (isset($_SESSION['fullName'])) { echo $_SESSION['fullName']; } else echo "Not found";?> ");
+            $("#Doctorinname2").val("<?php if (isset($_SESSION['fullName'])) { echo $_SESSION['fullName'];}else echo "Not found"; ?> ");
             $("#patientinname2").val(pName);
             $("#DoctorModal2").modal("show");
         })
     </script>
+    <script>
+        $(document).on('change', '#doctor_select', function() {
+    var selectedDoctorID = $(this).val();
 
+    $.ajax({
+        type: 'POST',
+        url: 'index.php',
+        data: {
+            doctorIDhello: selectedDoctorID
+        },
+        success: function(response) {
+            console.log(response);
+            location.reload();
+        }
+    });
+});
+
+    </script>
 </body>
 
 </html>

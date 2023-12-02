@@ -39,18 +39,26 @@ function checkExpire($slot)
 function checkTime($ts, $dt)
 {
     global $DB_CONNECTOR;
-
+    if (!isset($_SESSION['doctorID'])){
     $sql = "SELECT * FROM appointment WHERE appointment_timeslot='$ts' AND appointment_date = '$dt'";
+    }else{
+    $sql = "SELECT * FROM appointment WHERE appointment_timeslot='$ts' AND appointment_date = '$dt' AND appointment_doctorID = '{$_SESSION['doctorID']}'";
+    }
     $result = $DB_CONNECTOR->query($sql);
+
     if ($result->num_rows > 0) return true;
     return false;
 }
 function checkMyappointment($ts, $dt)
 {
     global $DB_CONNECTOR;
-
+    if (isset($_SESSION['doctorID'])){
+    $sql = "SELECT * FROM appointment WHERE appointment_timeslot='$ts' AND appointment_date = '$dt' AND appointment_status ='O' AND appointment_patientID ='{$_SESSION['id']}' AND appointment_doctorID = '{$_SESSION['doctorID']}'";}
+    else{
     $sql = "SELECT * FROM appointment WHERE appointment_timeslot='$ts' AND appointment_date = '$dt' AND appointment_status ='O' AND appointment_patientID ='{$_SESSION['id']}'";
+    }
     $result = $DB_CONNECTOR->query($sql);
+
     if ($result->num_rows > 0) return true;
     return false;
 }
@@ -60,6 +68,7 @@ function checkMyappointment2($ts, $dt)
 
     $sql = "SELECT * FROM appointment WHERE appointment_timeslot='$ts' AND appointment_date = '$dt' AND appointment_status ='O' AND appointment_doctorID ='{$_SESSION['id']}'";
     $result = $DB_CONNECTOR->query($sql);
+
     if ($result->num_rows > 0) return true;
     return false;
 }
@@ -68,8 +77,13 @@ function checkOccupiedAppointment($ts, $dt)
 {
     global $DB_CONNECTOR;
 
-    $sql = "SELECT * FROM appointment WHERE appointment_timeslot='$ts' AND appointment_date = '$dt' AND appointment_status ='O'";
+    if (isset($_SESSION['doctorID'])){
+    $sql = "SELECT * FROM appointment WHERE appointment_timeslot='$ts' AND appointment_date = '$dt' AND appointment_status ='O' AND appointment_doctorID ='{$_SESSION['id']}'";
+    }else{
+        $sql = "SELECT * FROM appointment WHERE appointment_timeslot='$ts' AND appointment_date = '$dt' AND appointment_status ='O'";
+    }
     $result = $DB_CONNECTOR->query($sql);
+
     if ($result->num_rows > 0) return true;
     return false;
 }
@@ -77,18 +91,42 @@ function checkOccupiedAppointment($ts, $dt)
 function getPatientName($ts, $dt)
 {
     global $DB_CONNECTOR;
-
-    $sql = "SELECT * FROM appointment WHERE appointment_timeslot='$ts' AND appointment_date = '$dt'";
-    $result = $DB_CONNECTOR->query($sql);
+    if (isset($_SESSION['doctorID'])){
+    $sql = "SELECT * FROM appointment WHERE appointment_timeslot='$ts' AND appointment_date = '$dt' AND appointment_doctorID = '{$_SESSION['doctorID']}'";
+    }else{
+        $sql = "SELECT * FROM appointment WHERE appointment_timeslot='$ts' AND appointment_date = '$dt'";
+    }$result = $DB_CONNECTOR->query($sql);
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
         $sql2 = "SELECT * FROM users WHERE userID='{$row['appointment_patientID']}'";
         $result2 = $DB_CONNECTOR->query($sql2);
         if ($result2->num_rows > 0) {
             $row2 = $result2->fetch_assoc();
+  
             return $row2['fullName'];
         }
     }
+
     return "No Patient";
+}
+
+function getListDoctor()
+{
+    global $DB_CONNECTOR;
+    $sql = "SELECT * FROM users WHERE role = 1";
+    $result = $DB_CONNECTOR->query($sql);
+
+    return $result;
+}
+function getDoctorName(){
+    global $DB_CONNECTOR;
+    if  (isset($_SESSION['doctorID'])){
+    $sql = "SELECT * FROM users WHERE userID = '{$_SESSION['doctorID']}'";
+    $result = $DB_CONNECTOR->query($sql);
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+            return $row['fullName'];
+        }}
+    return "No Doctor Name";
 }
 ?>
