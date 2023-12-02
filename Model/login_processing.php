@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $hash_pwd = hash('sha512', $_POST['password']);
         if (loginVerification($_POST['email'], $hash_pwd)) {
             $_SESSION['login'] = true;
-            echo '<script type=text/javascript">window.location.replace("../index.php?page=home")</script>';
+            header("Location: ../index.php");
         } else {
             echo '<script type=text/javascript">window.location.replace("../index.php?page=login")</script>';
         }
