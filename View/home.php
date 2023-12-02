@@ -79,7 +79,7 @@ include './Model/homeBack.php';
                     if(isset($_SESSION['delete'])) {if($_SESSION['delete']) {echo "<div class='alert alert-danger'>Cancel Appointment Successfully</div>";$_SESSION['delete'] = false; }}
                     ?>
                 </div>
-                <table class="table table-bordered">
+                <div style="overflow: scroll"><table class="table table-bordered">
                     <tr class="table-success">
                         <?php
                         $timezone = new DateTimeZone('Asia/Ho_Chi_Minh');
@@ -159,7 +159,7 @@ include './Model/homeBack.php';
                     <?php
                     }
                     ?>
-                </table>
+                </table></div>
             </div>
         </div>
     </div>
