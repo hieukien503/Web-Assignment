@@ -95,7 +95,7 @@ include './Model/homeBack.php';
                     }
                     ?>
                 </div>
-                <table class="table table-bordered">
+                <div style="overflow: scroll"><table class="table table-bordered">
                     <tr class="table-success">
                         <?php
                         $timezone = new DateTimeZone('Asia/Ho_Chi_Minh');
@@ -174,7 +174,7 @@ include './Model/homeBack.php';
                     <?php
                     }
                     ?>
-                </table>
+                </table></div>
             </div>
         </div>
     </div>
