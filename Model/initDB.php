@@ -47,13 +47,13 @@ class InitDatabase
 $init_db = new InitDatabase();
 
 // Add a few doctors
-$init_db->addAccount('Dr. Kien', 'kien.le123@hcmut.edu.vn', hash('sha512', 'byebyebyebyebye'), 1);
-$init_db->addAccount('Dr. Jackson', 'jack@gmail.com', hash('sha512', '12345678'), 1);
-$init_db->addAccount('Dr. Steve', 'khoa.lesteve@hcmut.edu.com', hash('sha512', '12345678'), 1);
+$init_db->addAccount('Dr. Kien', 'kien.le123@hcmut.edu.vn', 'byebyebyebyebye', 1);
+$init_db->addAccount('Dr. Jackson', 'jack@gmail.com', '12345678', 1);
+$init_db->addAccount('Dr. Steve', 'khoa.lesteve@hcmut.edu.com', '12345678', 1);
 
 // Add a few patients
-$init_db->addAccount('Duong Van Hao', 'dvhao@gmail.com', hash('sha512', '12345678'), 0);
-$init_db->addAccount('Lai Van Minh', 'minh@gmail.com', hash('sha512', '12345678'), 0);
-$init_db->addAccount('Lam Phuong', 'phuong@saigonair.com', hash('sha512', '12345678'), 0);
+$init_db->addAccount('Duong Van Hao', 'dvhao@gmail.com', '12345678', 0);
+$init_db->addAccount('Lai Van Minh', 'minh@gmail.com', '12345678', 0);
+$init_db->addAccount('Lam Phuong', 'phuong@saigonair.com', '12345678', 0);
 
 $init_db->closeConnection();

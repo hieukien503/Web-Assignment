@@ -8,7 +8,7 @@ include_once("dbConnector.php");
 
 session_start();
 
-function loginVerification($email, $passwording)
+function loginVerification($email, $hashed_password)
 {
     // Use singleton DB_CONNECTOR from "dbConnector.php"
     global $DB_CONNECTOR;
@@ -20,7 +20,7 @@ function loginVerification($email, $passwording)
 
         $row = $result->fetch_assoc();
 
-        if (hash('sha512', $passwording) === $row['password']) {
+        if ($hashed_password === $row['password']) {
             grantUserSession($row);
 
             $DB_CONNECTOR->disconnect();
@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['login'] = true;
             header("Location: ../index.php");
         } else {
-
+            echo "Wrong password.";
             /**
              * TO-DO: handle invalid account.
              * 
