@@ -14,6 +14,7 @@
             else {
                 $sql = "INSERT INTO users (fullname, email, password) VALUES ('$fullname', '$email', '$hash_pwd')";
                 if ($conn->query($sql) === TRUE) {
+                    $conn->close();
                     echo '<script type="text/javascript">window.alert("Register successfully!")</script>';
                     echo '<script type="text/javascript">window.location.replace("../index.php?page=login")</script>';
                 }

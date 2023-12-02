@@ -57,26 +57,54 @@ include './Model/homeBack.php';
                     <br>
                 </center>
                 <?php
-                if (isset($_SESSION['role'])){
-                if (!($_SESSION['role'])) {
-                ?>
-                    <form id="doctor_select_form">
-                        <div class="row">
-                            <div class="col-md-6 col-md-offset-3 form-group">
-                                <label style="font-size: 17px;font-weight:semi-bold;margin-left:3px;margin-bottom:3px;"> Select your doctor :</label>
+                if (isset($_SESSION['role'])) {
+                    if (!($_SESSION['role'])) {
+                        include("./Model/connectDB.php");
+                        $query = "SELECT userID, fullName FROM users WHERE role = 1";
+                        $result = $conn->query($query);
 
-                                <select class="form-control" id="doctor_select" style="width: 200px;">
-                                    <option value="doctor1">Doctor Trinh Thu Thuy</option>
-                                </select>
-                                <br>
-                            </div>
-                        </div>
-                    </form> <?php }} ?>
+                        if ($result->num_rows > 0) {
+                ?>
+                            <form id="doctor_select_form">
+                                <div class="row">
+                                    <div class="col-md-6 col-md-offset-3 form-group">
+                                        <label style="font-size: 17px; font-weight:semi-bold; margin-left:3px; margin-bottom:3px;">Select your doctor :</label>
+
+                                        <select class="form-control" id="doctor_select" style="width: 200px;">
+                                            <?php
+                                            while ($row = $result->fetch_assoc()) {
+                                                echo '<option value="' . $row['userID'] . '">' . $row['fullName'] . '</option>';
+                                            }
+                                            ?>
+                                        </select>
+                                        <br>
+                                    </div>
+                                </div>
+                            </form>
+                <?php
+                        }
+                    }
+                } ?>
                 <div class="col-md-12">
-                <?php 
-                    if(isset($_SESSION['successful'])) {if($_SESSION['successful']) {echo "<div class='alert alert-success'>Booking Appointment Successfully</div>";$_SESSION['successful'] = false; }}  
-                    if(isset($_SESSION['sucful'])) {if($_SESSION['sucful']) {echo "<div class='alert alert-success'>Set up Appointment Successfully</div>";$_SESSION['sucful'] = false; }}
-                    if(isset($_SESSION['delete'])) {if($_SESSION['delete']) {echo "<div class='alert alert-danger'>Cancel Appointment Successfully</div>";$_SESSION['delete'] = false; }}
+                    <?php
+                    if (isset($_SESSION['successful'])) {
+                        if ($_SESSION['successful']) {
+                            echo "<div class='alert alert-success'>Booking Appointment Successfully</div>";
+                            $_SESSION['successful'] = false;
+                        }
+                    }
+                    if (isset($_SESSION['sucful'])) {
+                        if ($_SESSION['sucful']) {
+                            echo "<div class='alert alert-success'>Set up Appointment Successfully</div>";
+                            $_SESSION['sucful'] = false;
+                        }
+                    }
+                    if (isset($_SESSION['delete'])) {
+                        if ($_SESSION['delete']) {
+                            echo "<div class='alert alert-danger'>Cancel Appointment Successfully</div>";
+                            $_SESSION['delete'] = false;
+                        }
+                    }
                     ?>
                 </div>
                 <table class="table table-bordered">
@@ -122,11 +150,11 @@ include './Model/homeBack.php';
                                     } elseif (checkTime($ts, $curdate)) {
                                         if ($_SESSION['role']) {
                                             if (checkMyappointment2($ts, $curdate)) { ?>
-                                                <td><button class="btn btn-success btn-xs slot-btn doctorcancel" data-timeslot="<?php echo $ts; ?>" date-time="<?php echo $curdate; ?>" patient-name="<?php echo getPatientName($ts,$curdate); ?>">Your appointment</button></td>
+                                                <td><button class="btn btn-success btn-xs slot-btn doctorcancel" data-timeslot="<?php echo $ts; ?>" date-time="<?php echo $curdate; ?>" patient-name="<?php echo getPatientName($ts, $curdate); ?>">Your appointment</button></td>
                                             <?php
                                             } else {
                                             ?>
-                                                <td><button class="btn btn-info btn-xs slot-btn doctorcancel" data-timeslot="<?php echo $ts; ?>" date-time="<?php echo $curdate; ?>" patient-name="<?php echo getPatientName($ts,$curdate); ?>"><?php echo $ts;  ?></button></td>
+                                                <td><button class="btn btn-info btn-xs slot-btn doctorcancel" data-timeslot="<?php echo $ts; ?>" date-time="<?php echo $curdate; ?>" patient-name="<?php echo getPatientName($ts, $curdate); ?>"><?php echo $ts;  ?></button></td>
                                             <?php }
                                         } else {
                                             if (checkMyappointment($ts, $curdate)) { ?>
@@ -148,8 +176,7 @@ include './Model/homeBack.php';
                                     <?php
                                     } else {
                                     ?>
-                                        <td><button class="btn btn-light btn-xs slot-btn Lognotice"><?php echo $ts;  ?></button></td>
-
+                                        <td><button class="Notice-Login btn btn-light btn-xs slot-btn"><?php echo $ts;  ?></button></td>
                             <?php    }
                                 }
                                 $dt->modify('+1 day');
@@ -311,11 +338,11 @@ include './Model/homeBack.php';
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-12">
-                            <form action="" method="post">
-                                <div class="form-group">
-                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Okey, I got it !</button>
-                                </div>
-                            </form>
+
+
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Okey, I got it !</button>
+
+
                         </div>
                     </div>
                 </div>
@@ -372,14 +399,23 @@ include './Model/homeBack.php';
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
     <script>
+        //login notice
+
+        $(".Notice-Login").click(function() {
+            $("#NoticeModal").modal("show");
+        });
         // patient
         $(".book").click(function() {
             var timeslot = $(this).attr('data-timeslot');
             var date = $(this).attr('date-time');
             $("#dateapp").val(date);
             $("#timeslot").val(timeslot);
-            $("#Patientname1").val("<?php echo $_SESSION['fullName']; ?> ");
-            $("#email").val("<?php echo $_SESSION['email']; ?> ");
+            $("#Patientname1").val("<?php if (isset($_SESSION['fullName'])) {
+                                        echo $_SESSION['fullName'];
+                                    } else echo "Not found"; ?> ");
+            $("#email").val("<?php if (isset($_SESSION['email'])) {
+                                    echo $_SESSION['email'];
+                                } else echo "Not found"; ?> ");
             $("#doctr").val("Trinh Thu Thuy");
             $("#myModal").modal("show");
         })
@@ -389,7 +425,9 @@ include './Model/homeBack.php';
             $("#timeslotpatient").val(timeslot);
             $("#appointdate").val(date);
             $("#doctr2").val("Trinh Thu Thuy");
-            $("#patientname").val("<?php echo $_SESSION['fullName']; ?> ");
+            $("#patientname").val("<?php if (isset($_SESSION['fullName'])) {
+                                        echo $_SESSION['fullName'];
+                                    } else echo "Not found"; ?> ");
             $("#PatientModal2").modal("show");
         })
         // doctor
@@ -398,7 +436,9 @@ include './Model/homeBack.php';
             var date = $(this).attr('date-time');
             $("#timeslotdoctor").val(timeslot);
             $("#dateappoint").val(date);
-            $("#Doctorinname").val("<?php echo $_SESSION['fullName']; ?> ");
+            $("#Doctorinname").val("<?php if (isset($_SESSION['fullName'])) {
+                                        echo $_SESSION['fullName'];
+                                    } else echo "Not found"; ?> ");
             $("#DoctorModal").modal("show");
         })
         $(".doctorcancel").click(function() {
@@ -407,14 +447,35 @@ include './Model/homeBack.php';
             var pName = $(this).attr('patient-name');
             $("#timeslotdoctor2").val(timeslot);
             $("#dateappoint2").val(date);
-            $("#Doctorinname2").val("<?php echo $_SESSION['fullName']; ?> ");
+            $("#Doctorinname2").val("<?php if (isset($_SESSION['fullName'])) {
+                                            echo $_SESSION['fullName'];
+                                        } else echo "Not found"; ?> ");
             $("#patientinname2").val(pName);
             $("#DoctorModal2").modal("show");
         })
-        //login notice
-        $(".Lognotice").click(function() {
-            $("#NoticeModal").modal("show");
-        })
+    </script>
+    <script>
+        // JavaScript to handle the selection change and update the session variable
+        $(document).ready(function() {
+            $("#doctor_select").change(function() {
+                var selectedDoctorID = $(this).val();
+                <?php echo 'var sessionDoctorID = "' . session_id() . '";'; ?>
+                $.ajax({
+                    type: 'POST',
+                    url: 'update_session.php', // Replace with the actual PHP file to handle the update
+                    data: {
+                        sessionID: sessionDoctorID,
+                        doctorID: selectedDoctorID
+                    },
+                    success: function(response) {
+                        // Handle the response if needed
+                        console.log(response);
+                        // Reload the page
+                        location.reload();
+                    }
+                });
+            });
+        });
     </script>
 
 </body>
