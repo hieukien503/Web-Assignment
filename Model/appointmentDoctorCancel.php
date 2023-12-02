@@ -6,7 +6,11 @@ session_start();
 function deleteAppointment($date,$timeslot)
 { 
     global $DB_CONNECTOR;
+    if (isset($_SESSION['doctorID'])){
+    $sql = "DELETE FROM appointment WHERE appointment_date = '$date' AND appointment_timeslot = '$timeslot' AND appointment_doctorID ='{$_SESSION['id']}'";
+    }else {
     $sql = "DELETE FROM appointment WHERE appointment_date = '$date' AND appointment_timeslot = '$timeslot'";
+    }
     $result = $DB_CONNECTOR->query($sql);
     $DB_CONNECTOR->disconnect();
     return $result;

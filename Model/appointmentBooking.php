@@ -5,11 +5,14 @@ session_start();
 function bookingAppointment($date,$timeslot)
 { 
     global $DB_CONNECTOR;
-    $sql3 = "SELECT * FROM appointment WHERE appointment_timeslot='$timeslot' AND appointment_date = '$date' AND appointment_status ='O' AND appointment_patientID ='{$_SESSION['id']}'";
+    $sql3 = "SELECT * FROM appointment WHERE appointment_timeslot='$timeslot' AND appointment_date = '$date' AND appointment_status ='O' AND appointment_doctorID ='{$_SESSION['doctorID']}'";
     $result3 = $DB_CONNECTOR->query($sql3);
     if ($result3->num_rows > 0) return false;
-    $sql = "UPDATE appointment SET appointment_status='O' WHERE appointment_timeslot='$timeslot' AND appointment_date = '$date'";
-    $sql2   = "UPDATE appointment SET appointment_patientID = '{$_SESSION['id']}' WHERE appointment_timeslot='$timeslot' AND appointment_date = '$date'";
+    $sql4 = "SELECT * FROM appointment WHERE appointment_timeslot='$timeslot' AND appointment_date = '$date' AND appointment_status ='O' AND appointment_patientID ='{$_SESSION['id']}'";
+    $result4 = $DB_CONNECTOR->query($sql4);
+    if ($result4->num_rows > 0) return false;
+    $sql = "UPDATE appointment SET appointment_status='O' WHERE appointment_timeslot='$timeslot' AND appointment_date = '$date' AND appointment_doctorID ='{$_SESSION['doctorID']}'";
+    $sql2   = "UPDATE appointment SET appointment_patientID = '{$_SESSION['id']}' WHERE appointment_timeslot='$timeslot' AND appointment_date = '$date' AND appointment_doctorID ='{$_SESSION['doctorID']}'";
     $result = $DB_CONNECTOR->query($sql);
     $result2 = $DB_CONNECTOR->query($sql2);
     $DB_CONNECTOR->disconnect();

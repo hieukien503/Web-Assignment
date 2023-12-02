@@ -36,6 +36,7 @@ function grantUserSession($row)
 {
     if ($row['role'] == '0') {
         $_SESSION['role'] = false;
+        $_SESSION['doctorID'] = '1';
     } else if ($row['role'] == '1') {
         $_SESSION['role'] = true;
         $_SESSION['doctorID'] = $row['userID'];

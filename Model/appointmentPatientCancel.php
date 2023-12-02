@@ -7,7 +7,7 @@ function deletingAppointment($date,$timeslot)
 { 
     global $DB_CONNECTOR;
 
-    $sql = "UPDATE appointment SET appointment_status='I' WHERE appointment_timeslot='$timeslot' AND appointment_date = '$date'";
+    $sql = "UPDATE appointment SET appointment_status='I' WHERE appointment_timeslot='$timeslot' AND appointment_date = '$date' AND appointment_doctorID ='{$_SESSION['doctorID']}'";
     $result = $DB_CONNECTOR->query($sql);
     $DB_CONNECTOR->disconnect();
     return $result;
