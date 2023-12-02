@@ -20,7 +20,7 @@ function loginVerification($email, $passwording)
 
         $row = $result->fetch_assoc();
 
-        if ($passwording === $row['password']) {
+        if (hash('sha512', $passwording) === $row['password']) {
             grantUserSession($row);
 
             $DB_CONNECTOR->disconnect();
