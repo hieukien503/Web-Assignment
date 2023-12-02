@@ -1,12 +1,15 @@
 <?php
+include("dbConnector.php");
+
 
 session_start();
 function deletingAppointment($date,$timeslot)
 { 
-    include("connectDB.php");
+    global $DB_CONNECTOR;
+
     $sql = "UPDATE appointment SET appointment_status='I' WHERE appointment_timeslot='$timeslot' AND appointment_date = '$date'";
-    $result = $conn->query($sql);
-    $conn->close();
+    $result = $DB_CONNECTOR->query($sql);
+    $DB_CONNECTOR->disconnect();
     return $result;
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

@@ -1,13 +1,16 @@
 <?php
+include("dbConnector.php");
+
+
 session_start();
 function bookingAppointment($date,$timeslot)
 { 
-    include("connectDB.php");
+    global $DB_CONNECTOR;
     $sql = "UPDATE appointment SET appointment_status='O' WHERE appointment_timeslot='$timeslot' AND appointment_date = '$date'";
     $sql2   =   "UPDATE appointment SET appointment_patientID = '{$_SESSION['id']}' WHERE appointment_timeslot='$timeslot' AND appointment_date = '$date'";
-    $result = $conn->query($sql);
-    $result2 = $conn->query($sql2);
-    $conn->close();
+    $result = $DB_CONNECTOR->query($sql);
+    $result2 = $DB_CONNECTOR->query($sql2);
+    $DB_CONNECTOR->disconnect();
     return $result&&$result2;
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

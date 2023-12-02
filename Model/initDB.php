@@ -29,14 +29,16 @@ class InitDatabase
     public function addAccount($fullname, $mail, $password, $role)
     {
         // Check if account exists or not;
-        if ($this->conn->query("SELECT * FROM users WHERE email = '$mail'")->num_rows > 0) return;
+        if ($this->conn->query("SELECT * FROM users WHERE email = '$mail'")->num_rows > 0)
+            return;
 
         $hash_pwd = hash('sha512', $password);
         $sql = "INSERT INTO users (fullName, email, password,role) VALUES ('$fullname', '$mail', '$hash_pwd','$role')";
         $result = $this->conn->query($sql);
     }
 
-    public function closeConnection() {
+    public function closeConnection()
+    {
         $this->conn->close();
     }
 }

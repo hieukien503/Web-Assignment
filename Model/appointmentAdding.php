@@ -1,14 +1,17 @@
 <?php
+include("dbConnector.php");
+
 
 session_start();
 
-function addingAppointment($date,$timeslot)
-{ 
-    include("connectDB.php");
+function addingAppointment($date, $timeslot)
+{
+    global $DB_CONNECTOR;
+
     $sql = "INSERT INTO appointment (appointment_date, appointment_timeslot, appointment_doctorID, appointment_status)
     VALUES ('$date', '$timeslot', '{$_SESSION['id']}', 'I')";
-    $result = $conn->query($sql);
-    $conn->close();
+    $result = $DB_CONNECTOR->query($sql);
+    $DB_CONNECTOR->disconnect();
     return $result;
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -26,4 +29,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Location: ../login.php");
     }
 }
-?>
