@@ -1,5 +1,9 @@
 <?php
-
+session_start();
+$msg = '';
+if (isset($_SESSION["msg"])) {
+  $msg = $_SESSION["msg"];
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -14,7 +18,11 @@
 <body>
   <div id="register" class="container text-center">
     <h3>Register an account</h3>
+
     <form id="form" method="post" onsubmit="return validateForm()" action="./Model/register_processing.php">
+      <div id="msg" class="form-text" style="color: red;">
+        <?php echo $msg ?>
+      </div>
       <div class="input-icons">
         <input type="text" placeholder="Full name" id="fullname" name="fullname" autocomplete="off" required>
         <i class="fa fa-user icon"></i>
