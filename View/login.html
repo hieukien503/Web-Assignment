@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
     <link rel= "stylesheet" href="login.css">
+    <script src="../Model/validate.js"></script>
 </head>
 <body>
     <div id="signin" class="container text-center">
         <h1>Sign in</h1>
-        <form id="form" method="post">
+        <form id="form" method="post" onsubmit="return validateForm()">
             <div class="input-icons">
                 <input type="text" placeholder="Email address" id="email" autocomplete="off" required>
                 <i class="fa fa-envelope icon"></i>

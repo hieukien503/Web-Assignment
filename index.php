@@ -10,7 +10,7 @@ ini_set('display_errors', '1');
  * Run this script only once. 
  * When done, comment out this script.
  */
-// include_once("Model/initDB.php");
+//  include_once("Model/initDB.php");
 ?>
 
 <?php
