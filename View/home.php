@@ -124,35 +124,35 @@ include './Model/homeBack.php';
                                 if (isset($_SESSION['login'])) {
                                     if (checkExpire($ts) && ($dt->format('d M Y') == $todayne)) {
                             ?>
-                                        <td><button class="btn btn-light btn-xs slot-btn">Time Booking Expired</button></td>
+                                        <td><button class="btn btn-light btn-sm slot-btn text-muted" disabled>Time Booking Expired</button></td>
                                         <?php
                                     } elseif (!checkTime($ts, $curdate)) {
                                         if ($_SESSION['role']) {
                                         ?>
-                                            <td><button class="btn btn-light btn-xs slot-btn doctorSet" data-timeslot="<?php echo $ts; ?>" date-time="<?php echo $curdate; ?>"><?php echo $ts;  ?></button></td>
+                                            <td><button class="btn btn-light btn-sm slot-btn doctorSet" data-timeslot="<?php echo $ts; ?>" date-time="<?php echo $curdate; ?>"><?php echo $ts;  ?></button></td>
                                         <?php
                                         } else {
                                         ?>
-                                            <td><button class="btn btn-light btn-xs slot-btn"><?php echo $ts;  ?></button></td>
+                                            <td><button class="btn btn-light btn-sm slot-btn text-muted" disabled><?php echo $ts;  ?></button></td>
                                             <?php }
                                     } elseif (checkTime($ts, $curdate)) {
                                         if ($_SESSION['role']) {
                                             if (checkMyappointment2($ts, $curdate)) { ?>
-                                                <td><button class="btn btn-success btn-xs slot-btn doctorcancel" data-timeslot="<?php echo $ts; ?>" date-time="<?php echo $curdate; ?>" patient-name="<?php echo getPatientName($ts, $curdate); ?>">Your appointment</button></td>
+                                                <td><button class="btn btn-success btn-sm slot-btn doctorcancel" data-timeslot="<?php echo $ts; ?>" date-time="<?php echo $curdate; ?>" patient-name="<?php echo getPatientName($ts, $curdate); ?>">Your appointment</button></td>
                                             <?php
                                             } else {
                                             ?>
-                                                <td><button class="btn btn-info btn-xs slot-btn doctorcancel" data-timeslot="<?php echo $ts; ?>" date-time="<?php echo $curdate; ?>" patient-name="<?php echo getPatientName($ts, $curdate); ?>"><?php echo $ts;  ?></button></td>
+                                                <td><button class="btn btn-info btn-sm slot-btn doctorcancel" data-timeslot="<?php echo $ts; ?>" date-time="<?php echo $curdate; ?>" patient-name="<?php echo getPatientName($ts, $curdate); ?>"><?php echo $ts;  ?></button></td>
                                             <?php }
                                         } else {
                                             if (checkMyappointment($ts, $curdate)) { ?>
-                                                <td><button class="btn btn-success btn-xs slot-btn patientcancel" data-timeslot="<?php echo $ts; ?>" date-time="<?php echo $curdate; ?>">Your appointment</button></td>
+                                                <td><button class="btn btn-success btn-sm slot-btn patientcancel" data-timeslot="<?php echo $ts; ?>" date-time="<?php echo $curdate; ?>">Your appointment</button></td>
                                             <?php
                                             } elseif (checkOccupiedAppointment($ts, $curdate)) { ?>
-                                                <td><button class="btn btn-danger btn-xs slot-btn">Being Occupied</button></td>
+                                                <td><button class="btn btn-danger btn-sm slot-btn">Being Occupied</button></td>
                                             <?php } else {
                                             ?>
-                                                <td><button class="btn btn-info btn-xs slot-btn book" data-timeslot="<?php echo $ts; ?>" date-time="<?php echo $curdate; ?>"><?php echo $ts;  ?></button></td>
+                                                <td><button class="btn btn-info btn-sm slot-btn book" data-timeslot="<?php echo $ts; ?>" date-time="<?php echo $curdate; ?>"><?php echo $ts;  ?></button></td>
                                         <?php
                                             }
                                         }
@@ -160,11 +160,11 @@ include './Model/homeBack.php';
                                 } elseif (!isset($_SESSION['login'])) {
                                     if (checkExpire($ts) && ($dt->format('d M Y') == $todayne)) {
                                         ?>
-                                        <td><button class="btn btn-light btn-xs slot-btn">Time Booking Expired</button></td>
+                                        <td><button class="btn btn-light btn-sm slot-btn">Time Booking Expired</button></td>
                                     <?php
                                     } else {
                                     ?>
-                                        <td><button class="Notice-Login btn btn-light btn-xs slot-btn"><?php echo $ts;  ?></button></td>
+                                        <td><button class="Notice-Login btn btn-light btn-sm slot-btn"><?php echo $ts;  ?></button></td>
                             <?php    }
                                 }
                                 $dt->modify('+1 day');
