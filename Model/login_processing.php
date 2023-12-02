@@ -5,9 +5,12 @@ session_start();
 
 function loginVerification($email, $passwording)
 {
-    include("connectDB.php");
-    $sql = "SELECT * FROM users WHERE email = '$email'";
-    $result = $conn->query($sql);
+    global $DB_CONNECTOR;
+
+    $hashed_password = hash('sha612', $passwording);
+
+    $result = $DB_CONNECTOR->query("SELECT * FROM users WHERE email = '$email'");
+
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
         if ($passwording === $row['password']) {

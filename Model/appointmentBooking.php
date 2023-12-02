@@ -2,7 +2,7 @@
 session_start();
 function bookingAppointment($date,$timeslot)
 { 
-    include("connectDB.php");
+    include("initDB.php");
     $sql = "UPDATE appointment SET appointment_status='O' WHERE appointment_timeslot='$timeslot' AND appointment_date = '$date'";
     $sql2   =   "UPDATE appointment SET appointment_patientID = '{$_SESSION['id']}' WHERE appointment_timeslot='$timeslot' AND appointment_date = '$date'";
     $result = $conn->query($sql);

@@ -4,7 +4,7 @@ session_start();
 
 function addingAppointment($date,$timeslot)
 { 
-    include("connectDB.php");
+    include("initDB.php");
     $sql = "INSERT INTO appointment (appointment_date, appointment_timeslot, appointment_doctorID, appointment_status)
     VALUES ('$date', '$timeslot', '{$_SESSION['id']}', 'I')";
     $result = $conn->query($sql);

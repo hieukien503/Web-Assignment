@@ -3,7 +3,7 @@
 session_start();
 function deletingAppointment($date,$timeslot)
 { 
-    include("connectDB.php");
+    include("initDB.php");
     $sql = "UPDATE appointment SET appointment_status='I' WHERE appointment_timeslot='$timeslot' AND appointment_date = '$date'";
     $result = $conn->query($sql);
     $conn->close();

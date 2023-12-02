@@ -3,10 +3,10 @@ class InitDatabase
 {
     private $servername = "localhost";
     private $username = "root";
-    private $password = "";
+    private $password = "1234";
     private $dbname = "BOOKING_APPOINTMENT";
 
-    private $conn = null;
+    public $conn = null;
 
     public function __construct()
     {
@@ -14,7 +14,7 @@ class InitDatabase
          * The very first connection to initialize the database schema.
          * Query content is sourced from DB.SQL
          */
-        $db_schema_query = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/Model/DB.SQL");
+        $db_schema_query = file_get_contents($_SERVER['DOCUMENT_ROOT'] . "/dashboard/Web-Assignment-main/Web-Assignment-main/Model/DB.SQL");
 
         $init_conn = new mysqli($this->servername, $this->username, $this->password);
         $init_conn->multi_query($db_schema_query);
@@ -45,13 +45,13 @@ class InitDatabase
 $init_db = new InitDatabase();
 
 // Add a few doctors
-$init_db->addAccount('Dr. Kien', 'kien.le123@hcmut.edu.vn', hash('sha512', 'byebye'), 1);
-$init_db->addAccount('Dr. Jackson', 'jack@gmail.com', hash('sha512', '123456'), 1);
-$init_db->addAccount('Dr. Steve', 'khoa.lesteve@hcmut.edu.com', hash('sha512', '123456'), 1);
+$init_db->addAccount('Dr. Kien', 'kien.le123@hcmut.edu.vn', 'byebye', 1);
+$init_db->addAccount('Dr. Jackson', 'jack@gmail.com', '123456', 1);
+$init_db->addAccount('Dr. Steve', 'khoa.lesteve@hcmut.edu.com', '123456', 1);
 
 // Add a few patients
-$init_db->addAccount('Duong Van Hao', 'dvhao@gmail.vn', hash('sha512', '123456'), 0);
-$init_db->addAccount('Lai Van Minh', 'minh@gmail.com', hash('sha512', '123456'), 0);
-$init_db->addAccount('Lam Phuong', 'phuong@saigonair.com', hash('sha512', '123456'), 0);
+$init_db->addAccount('Duong Van Hao', 'dvhao@gmail.vn', '123456', 0);
+$init_db->addAccount('Lai Van Minh', 'minh@gmail.com', '123456', 0);
+$init_db->addAccount('Lam Phuong', 'phuong@saigonair.com', '123456', 0);
 
 $init_db->closeConnection();

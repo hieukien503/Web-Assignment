@@ -4,7 +4,6 @@ session_start();
 if (isset($_SESSION['login'])) {
     header("Location: index.php?page=home");
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -13,11 +12,12 @@ if (isset($_SESSION['login'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
     <link rel= "stylesheet" href="./View/login.css">
+    
 </head>
 <body>
     <div id="signin" class="container text-center">
         <h1>Sign in</h1>
-        <form id="form" method="post" action="./Model/login_processing.php">
+        <form id="form" method="post" action="./Model/login_processing.php"  onsubmit="return validateForm()" >
             <div class="input-icons">
                 <input type="text" placeholder="Email address" id="email" name="email" autocomplete="off" required>
                 <i class="fa fa-envelope icon"></i>
@@ -32,4 +32,20 @@ if (isset($_SESSION['login'])) {
         </form>
     </div>
 </body>
+<script>
+    function validateForm() {
+      let x = document.forms["form"]["email"].value;
+      let mailformat = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+
+      if (x.match(mailformat) == null) {
+        alert("Invalid Email");
+        return false;
+      };
+      let y = document.forms["form"]["password"].value;
+      if (y.length < 8) {
+        alert("Password must be longer than 8 characters");
+        return false;
+      };
+    }
+  </script>
 </html>

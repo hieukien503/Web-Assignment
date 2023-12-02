@@ -35,7 +35,7 @@ function checkExpire($slot)
 
 function checkTime($ts, $dt)
 {
-    include("connectDB.php");
+    include("initDB.php");
     $sql = "SELECT * FROM appointment WHERE appointment_timeslot='$ts' AND appointment_date = '$dt'";
     $result = $conn->query($sql);
     if ($result->num_rows > 0) return true;
@@ -43,7 +43,7 @@ function checkTime($ts, $dt)
 }
 function checkMyappointment($ts, $dt)
 {
-    include("connectDB.php");
+    include("initDB.php");
     $sql = "SELECT * FROM appointment WHERE appointment_timeslot='$ts' AND appointment_date = '$dt' AND appointment_status ='O' AND appointment_patientID ='{$_SESSION['id']}'";
     $result = $conn->query($sql);
     if ($result->num_rows > 0) return true;
@@ -51,7 +51,7 @@ function checkMyappointment($ts, $dt)
 }
 function checkMyappointment2($ts, $dt)
 {
-    include("connectDB.php");
+    include("initDB.php");
     $sql = "SELECT * FROM appointment WHERE appointment_timeslot='$ts' AND appointment_date = '$dt' AND appointment_status ='O' AND appointment_doctorID ='{$_SESSION['id']}'";
     $result = $conn->query($sql);
     if ($result->num_rows > 0) return true;
@@ -60,7 +60,7 @@ function checkMyappointment2($ts, $dt)
 // this function is to avoid checking null patientID
 function checkOccupiedAppointment($ts, $dt)
 {
-    include("connectDB.php");
+    include("initDB.php");
     $sql = "SELECT * FROM appointment WHERE appointment_timeslot='$ts' AND appointment_date = '$dt' AND appointment_status ='O'";
     $result = $conn->query($sql);
     if ($result->num_rows > 0) return true;
@@ -69,7 +69,7 @@ function checkOccupiedAppointment($ts, $dt)
 
 function getPatientName($ts, $dt)
 {
-    include("connectDB.php");
+    include("initDB.php");
     $sql = "SELECT * FROM appointment WHERE appointment_timeslot='$ts' AND appointment_date = '$dt'";
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
