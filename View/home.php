@@ -59,32 +59,20 @@ include './Model/homeBack.php';
                 <?php
                 if (isset($_SESSION['role'])) {
                     if (!($_SESSION['role'])) {
-                        include("./Model/connectDB.php");
-                        $query = "SELECT userID, fullName FROM users WHERE role = 1";
-                        $result = $conn->query($query);
-
-                        if ($result->num_rows > 0) {
                 ?>
-                            <form id="doctor_select_form">
-                                <div class="row">
-                                    <div class="col-md-6 col-md-offset-3 form-group">
-                                        <label style="font-size: 17px; font-weight:semi-bold; margin-left:3px; margin-bottom:3px;">Select your doctor :</label>
+                        <form id="doctor_select_form">
+                            <div class="row">
+                                <div class="col-md-6 col-md-offset-3 form-group">
+                                    <label style="font-size: 17px;font-weight:semi-bold;margin-left:3px;margin-bottom:3px;"> Select your doctor :</label>
 
-                                        <select class="form-control" id="doctor_select" style="width: 200px;">
-                                            <?php
-                                            while ($row = $result->fetch_assoc()) {
-                                                echo '<option value="' . $row['userID'] . '">' . $row['fullName'] . '</option>';
-                                            }
-                                            ?>
-                                        </select>
-                                        <br>
-                                    </div>
+                                    <select class="form-control" id="doctor_select" style="width: 200px;">
+                                        <option value="doctor1">Doctor Trinh Thu Thuy</option>
+                                    </select>
+                                    <br>
                                 </div>
-                            </form>
-                <?php
-                        }
-                    }
-                } ?>
+                            </div>
+                        </form> <?php }
+                        } ?>
                 <div class="col-md-12">
                     <?php
                     if (isset($_SESSION['successful'])) {
@@ -410,12 +398,8 @@ include './Model/homeBack.php';
             var date = $(this).attr('date-time');
             $("#dateapp").val(date);
             $("#timeslot").val(timeslot);
-            $("#Patientname1").val("<?php if (isset($_SESSION['fullName'])) {
-                                        echo $_SESSION['fullName'];
-                                    } else echo "Not found"; ?> ");
-            $("#email").val("<?php if (isset($_SESSION['email'])) {
-                                    echo $_SESSION['email'];
-                                } else echo "Not found"; ?> ");
+            $("#Patientname1").val("<?php if (isset($_SESSION['fullName'])) { echo $_SESSION['fullName']; } else echo "Not found";?> ");
+            $("#email").val("<?php if (isset($_SESSION['email'])) { echo $_SESSION['email']; } else echo "Not found";?> ");
             $("#doctr").val("Trinh Thu Thuy");
             $("#myModal").modal("show");
         })
@@ -425,9 +409,7 @@ include './Model/homeBack.php';
             $("#timeslotpatient").val(timeslot);
             $("#appointdate").val(date);
             $("#doctr2").val("Trinh Thu Thuy");
-            $("#patientname").val("<?php if (isset($_SESSION['fullName'])) {
-                                        echo $_SESSION['fullName'];
-                                    } else echo "Not found"; ?> ");
+            $("#patientname").val("<?php if (isset($_SESSION['fullName'])) { echo $_SESSION['fullName']; } else echo "Not found";?> ");
             $("#PatientModal2").modal("show");
         })
         // doctor
@@ -436,9 +418,7 @@ include './Model/homeBack.php';
             var date = $(this).attr('date-time');
             $("#timeslotdoctor").val(timeslot);
             $("#dateappoint").val(date);
-            $("#Doctorinname").val("<?php if (isset($_SESSION['fullName'])) {
-                                        echo $_SESSION['fullName'];
-                                    } else echo "Not found"; ?> ");
+            $("#Doctorinname").val("<?php if (isset($_SESSION['fullName'])) { echo $_SESSION['fullName']; } else echo "Not found";?> ");
             $("#DoctorModal").modal("show");
         })
         $(".doctorcancel").click(function() {
@@ -447,35 +427,10 @@ include './Model/homeBack.php';
             var pName = $(this).attr('patient-name');
             $("#timeslotdoctor2").val(timeslot);
             $("#dateappoint2").val(date);
-            $("#Doctorinname2").val("<?php if (isset($_SESSION['fullName'])) {
-                                            echo $_SESSION['fullName'];
-                                        } else echo "Not found"; ?> ");
+            $("#Doctorinname2").val("<?php if (isset($_SESSION['fullName'])) { echo $_SESSION['fullName']; } else echo "Not found";?> ");
             $("#patientinname2").val(pName);
             $("#DoctorModal2").modal("show");
         })
-    </script>
-    <script>
-        // JavaScript to handle the selection change and update the session variable
-        $(document).ready(function() {
-            $("#doctor_select").change(function() {
-                var selectedDoctorID = $(this).val();
-                <?php echo 'var sessionDoctorID = "' . session_id() . '";'; ?>
-                $.ajax({
-                    type: 'POST',
-                    url: 'update_session.php', // Replace with the actual PHP file to handle the update
-                    data: {
-                        sessionID: sessionDoctorID,
-                        doctorID: selectedDoctorID
-                    },
-                    success: function(response) {
-                        // Handle the response if needed
-                        console.log(response);
-                        // Reload the page
-                        location.reload();
-                    }
-                });
-            });
-        });
     </script>
 
 </body>

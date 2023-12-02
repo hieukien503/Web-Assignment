@@ -29,14 +29,15 @@ class InitDatabase
     public function addAccount($fullname, $mail, $password, $role)
     {
         // Check if account exists or not;
-        if ($this->conn->query("SELECT * FROM users WHERE email = '$mail'")->num_rows > 0) return;
+        if ($this->conn->query("SELECT * FROM users WHERE email = '$mail'")->num_rows > 0)
+            return;
 
-        $hash_pwd = hash('sha512', $password);
-        $sql = "INSERT INTO users (fullName, email, password,role) VALUES ('$fullname', '$mail', '$hash_pwd','$role')";
+        $sql = "INSERT INTO users (fullName, email, password,role) VALUES ('$fullname', '$mail', '$password','$role')";
         $result = $this->conn->query($sql);
     }
 
-    public function closeConnection() {
+    public function closeConnection()
+    {
         $this->conn->close();
     }
 }
@@ -45,13 +46,13 @@ class InitDatabase
 $init_db = new InitDatabase();
 
 // Add a few doctors
-$init_db->addAccount('Dr. Kien', 'kien.le123@hcmut.edu.vn', hash('sha512', 'byebye'), 1);
-$init_db->addAccount('Dr. Jackson', 'jack@gmail.com', hash('sha512', '123456'), 1);
-$init_db->addAccount('Dr. Steve', 'khoa.lesteve@hcmut.edu.com', hash('sha512', '123456'), 1);
+$init_db->addAccount('Dr. Kien', 'kien.le123@hcmut.edu.vn', hash('sha512', 'byebyebyebyebye'), 1);
+$init_db->addAccount('Dr. Jackson', 'jack@gmail.com', hash('sha512', '12345678'), 1);
+$init_db->addAccount('Dr. Steve', 'khoa.lesteve@hcmut.edu.com', hash('sha512', '12345678'), 1);
 
 // Add a few patients
-$init_db->addAccount('Duong Van Hao', 'dvhao@gmail.vn', hash('sha512', '123456'), 0);
-$init_db->addAccount('Lai Van Minh', 'minh@gmail.com', hash('sha512', '123456'), 0);
-$init_db->addAccount('Lam Phuong', 'phuong@saigonair.com', hash('sha512', '123456'), 0);
+$init_db->addAccount('Duong Van Hao', 'dvhao@gmail.vn', hash('sha512', '12345678'), 0);
+$init_db->addAccount('Lai Van Minh', 'minh@gmail.com', hash('sha512', '12345678'), 0);
+$init_db->addAccount('Lam Phuong', 'phuong@saigonair.com', hash('sha512', '12345678'), 0);
 
 $init_db->closeConnection();
