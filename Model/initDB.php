@@ -35,6 +35,10 @@ class InitDatabase
         $sql = "INSERT INTO users (fullName, email, password,role) VALUES ('$fullname', '$mail', '$hash_pwd','$role')";
         $result = $this->conn->query($sql);
     }
+
+    public function closeConnection() {
+        $this->conn->close();
+    }
 }
 
 // Initialize schema (and drop old one)
@@ -49,3 +53,5 @@ $init_db->addAccount('Dr. Steve', 'khoa.lesteve@hcmut.edu.com', '123456', 1);
 $init_db->addAccount('Duong Van Hao', 'dvhao@gmail.vn', '123456', 0);
 $init_db->addAccount('Lai Van Minh', 'minh@gmail.com', '123456', 0);
 $init_db->addAccount('Lam Phuong', 'phuong@saigonair.com', '123456', 0);
+
+$init_db->closeConnection();
