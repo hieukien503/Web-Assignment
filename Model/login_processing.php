@@ -7,15 +7,17 @@ function loginVerification($email, $passwording)
 {
     global $DB_CONNECTOR;
 
-    $hashed_password = hash('sha612', $passwording);
+    $hashed_password = hash('sha512', $passwording);
 
     $result = $DB_CONNECTOR->query("SELECT * FROM users WHERE email = '$email'");
 
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
         if ($passwording === $row['password']) {
-            if ($row['role'] == '0') $_SESSION['role'] = false;
-            else $_SESSION['role'] = true;
+            if ($row['role'] == '0')
+                $_SESSION['role'] = false;
+            else
+                $_SESSION['role'] = true;
             $_SESSION['fullName'] = $row['fullName'];
             $_SESSION['id'] = $row['userID'];
             $_SESSION['email'] = $row['email'];

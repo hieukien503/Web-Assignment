@@ -14,6 +14,7 @@ if (isset($_SESSION['login'])) {
   <title>Login Page</title>
   <link rel="stylesheet" href="./View/login.css">
 
+  <script type="text/javascript" src="validate.js"></script>
 </head>
 
 <body>
@@ -37,7 +38,7 @@ if (isset($_SESSION['login'])) {
     </form>
   </div>
 </body>
-<script>
+<!-- <script>
   function validateForm() {
     let x = document.forms["form"]["email"].value;
     let mailformat = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
@@ -55,6 +56,6 @@ if (isset($_SESSION['login'])) {
       return false;
     };
   }
-</script>
+</script> -->
 
 </html>
