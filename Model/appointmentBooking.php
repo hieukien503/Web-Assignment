@@ -26,7 +26,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $patientID = $_SESSION['id'];
             $patientInfo = $DB_CONNECTOR->query("SELECT fullName, email FROM users WHERE userID='$patientID'")->fetch_assoc();
             $doctorInfo = $DB_CONNECTOR->query("SELECT fullName, email FROM users WHERE userID='$doctorID'")->fetch_assoc();
-            sendMail($patientInfo['email'], $patientInfo['fullName'], $doctorInfo['email'], $doctorInfo['fullName']);
+            $appointmentInfo = $DB_CONNECTOR->query("SELECT appointment_timeslot, appointment_date FROM appointment WHERE appointment_timeslot='{$_POST['timeslot']}' AND appointment_date = '{$_POST['dateapp']}' AND appointment_doctorID ='{$_SESSION['doctorID']}'")->fetch_assoc();
+            sendMail($patientInfo['email'], $patientInfo['fullName'], $doctorInfo['email'], $doctorInfo['fullName'], $appointmentInfo['appointment_timeslot'], $appointmentInfo['appointment_date'],);
+            sendMailforDoctor($patientInfo['email'], $patientInfo['fullName'], $doctorInfo['email'], $doctorInfo['fullName'], $appointmentInfo['appointment_timeslot'], $appointmentInfo['appointment_date'],);
             header("Location: ../index.php");
             exit();
         } else {

@@ -61,13 +61,13 @@ class InitDatabase
 $init_db = new InitDatabase();
 
 // Add a few doctors
-$init_db->addAccount('Dr. Kien', 'kien.le123@hcmut.edu.vn', 'byebyebyebyebye', 1);
-$init_db->addAccount('Dr. Khuong', 'jack@gmail.com', '12345678', 1);
-$init_db->addAccount('Dr. Steve', 'khoa.lesteve@hcmut.edu.com', '12345678', 1);
+$init_db->addAccount('Dr. Kien', 'kien.le123@hcmut.edu.vn', '12345678', 1);
+$init_db->addAccount('Dr. Khuong', 'khuong.nguyen.csk19@hcmut.edu.vn', '12345678', 1);
+$init_db->addAccount('Dr. Khoa', 'khoa.lesteve@hcmut.edu.vn', '12345678', 1);
 
 // Add a few patients
-$init_db->addAccount('Duong Van Hao', 'dvhao@gmail.com', '12345678', 0);
-$init_db->addAccount('Lai Van Minh', 'minh@gmail.com', '12345678', 0);
-$init_db->addAccount('Lam Phuong', 'phuong@saigonair.com', '12345678', 0);
+$init_db->addAccount('Le Trong Kien', 'trongkienbadblood@gmail.com', '12345678', 0);
+$init_db->addAccount('Nguyen Khuong', 'nguyenkhuong8321@gmail.com', '12345678', 0);
+$init_db->addAccount('Tran Le Nguyen Khoa', 'vietnamkhoale@gmail.com', '12345678', 0);
 
 $init_db->closeConnection();

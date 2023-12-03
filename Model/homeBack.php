@@ -4,8 +4,8 @@ include("dbConnector.php");
 
 $duration = 30;
 $cleanup = 0;
-$start = "16:00";
-$end = "23:30";
+$start = "08:00";
+$end = "16:00";
 session_start();
 function timeslots($duration, $cleanup, $start, $end)
 {
