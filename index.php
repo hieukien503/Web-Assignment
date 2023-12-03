@@ -10,12 +10,8 @@ ini_set('display_errors', '1');
  * Run this script only once. 
  * When done, comment out this script.
  */
-if (isset($_SESSION['initDB']))
-{
-    if($_SESSION['initDB']) {include_once("Model/initDB.php");$_SESSION['initDB'] = false;}
-}
 
-
+include_once("Model/initDB.php");
 ?>
 
 <?php

@@ -58,7 +58,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $hash_pwd = hash('sha512', $_POST['password']);
         if (loginVerification($_POST['email'], $hash_pwd)) {
             $_SESSION['login'] = true;
-            $_SESSION['initDB'] = true;
             header("Location: ../index.php");
         } else {
             // Prepare for email prefilling when heading back
