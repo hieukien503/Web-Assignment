@@ -44,8 +44,8 @@ class InitDatabase
         // Check if account exists or not;
         if ($this->conn->query("SELECT * FROM users WHERE email = '$mail'")->num_rows > 0)
             return;
-
-        $sql = "INSERT INTO Users (fullName, email, password,role) VALUES ('$fullname', '$mail', '$password','$role')";
+        $hashed_password = hash('sha512', $password);
+        $sql = "INSERT INTO Users (fullName, email, password,role) VALUES ('$fullname', '$mail', '$hashed_password','$role')";
         $result = $this->conn->query($sql);
     }
 
