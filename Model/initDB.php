@@ -31,9 +31,10 @@ class InitDatabase
         // Check if account exists or not;
         if ($this->conn->query("SELECT * FROM users WHERE email = '$mail'")->num_rows > 0)
             return;
+        if ($this->conn->query("SELECT * FROM users WHERE email = '$mail'")->num_rows > 0)
+            return;
 
-        $hash_pwd = hash('sha512', $password);
-        $sql = "INSERT INTO users (fullName, email, password,role) VALUES ('$fullname', '$mail', '$hash_pwd','$role')";
+        $sql = "INSERT INTO users (fullName, email, password,role) VALUES ('$fullname', '$mail', '$password','$role')";
         $result = $this->conn->query($sql);
     }
 
@@ -50,10 +51,16 @@ $init_db = new InitDatabase();
 $init_db->addAccount('Dr. Kien', 'kien.le123@hcmut.edu.vn', 'byebye', 1);
 $init_db->addAccount('Dr. Jackson', 'jack@gmail.com', '123456', 1);
 $init_db->addAccount('Dr. Steve', 'khoa.lesteve@hcmut.edu.com', '123456', 1);
+$init_db->addAccount('Dr. Kien', 'kien.le123@hcmut.edu.vn', 'byebyebyebyebye', 1);
+$init_db->addAccount('Dr. Jackson', 'jack@gmail.com', '12345678', 1);
+$init_db->addAccount('Dr. Steve', 'khoa.lesteve@hcmut.edu.com', '12345678', 1);
 
 // Add a few patients
 $init_db->addAccount('Duong Van Hao', 'dvhao@gmail.vn', '123456', 0);
 $init_db->addAccount('Lai Van Minh', 'minh@gmail.com', '123456', 0);
 $init_db->addAccount('Lam Phuong', 'phuong@saigonair.com', '123456', 0);
+$init_db->addAccount('Duong Van Hao', 'dvhao@gmail.com', '12345678', 0);
+$init_db->addAccount('Lai Van Minh', 'minh@gmail.com', '12345678', 0);
+$init_db->addAccount('Lam Phuong', 'phuong@saigonair.com', '12345678', 0);
 
 $init_db->closeConnection();

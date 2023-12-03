@@ -14,7 +14,6 @@ if (isset($_SESSION['login'])) {
   <title>Login Page</title>
   <link rel="stylesheet" href="./View/login.css">
 
-  <script type="text/javascript" src="validate.js"></script>
 </head>
 
 <body>

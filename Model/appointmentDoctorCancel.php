@@ -1,12 +1,18 @@
 <?php
+include("dbConnector.php");
+
 
 session_start();
 function deleteAppointment($date,$timeslot)
 { 
-    include("initDB.php");
+    global $DB_CONNECTOR;
+    if (isset($_SESSION['doctorID'])){
+    $sql = "DELETE FROM appointment WHERE appointment_date = '$date' AND appointment_timeslot = '$timeslot' AND appointment_doctorID ='{$_SESSION['id']}'";
+    }else {
     $sql = "DELETE FROM appointment WHERE appointment_date = '$date' AND appointment_timeslot = '$timeslot'";
-    $result = $conn->query($sql);
-    $conn->close();
+    }
+    $result = $DB_CONNECTOR->query($sql);
+    $DB_CONNECTOR->disconnect();
     return $result;
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
