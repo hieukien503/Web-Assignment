@@ -10,43 +10,27 @@ session_start();
 
 function loginVerification($email, $hashed_password)
 {
-<<<<<<< HEAD
-    global $DB_CONNECTOR;
 
-    $hashed_password = hash('sha512', $passwording);
-
-=======
     // Use singleton DB_CONNECTOR from "dbConnector.php"
     global $DB_CONNECTOR;
 
->>>>>>> 9448510d2a3d7f944975ef7539391a49fb926d08
     $result = $DB_CONNECTOR->query("SELECT * FROM users WHERE email = '$email'");
 
     if ($result->num_rows > 0) {
         // If account exists
 
+        $_SESSION["exist"] = true;
         $row = $result->fetch_assoc();
-<<<<<<< HEAD
-        if ($passwording === $row['password']) {
-            if ($row['role'] == '0')
-                $_SESSION['role'] = false;
-            else
-                $_SESSION['role'] = true;
-            $_SESSION['fullName'] = $row['fullName'];
-            $_SESSION['id'] = $row['userID'];
-            $_SESSION['email'] = $row['email'];
-            $conn->close();
-=======
 
         if ($hashed_password === $row['password']) {
             grantUserSession($row);
 
             $DB_CONNECTOR->disconnect();
->>>>>>> 9448510d2a3d7f944975ef7539391a49fb926d08
             return true;
         }
     }
 
+    $_SESSION["exist"] = false;
     $DB_CONNECTOR->disconnect();
     return false;
 }
@@ -77,7 +61,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['initDB'] = true;
             header("Location: ../index.php");
         } else {
-            echo "Wrong password.";
             /**
              * TO-DO: handle invalid account.
              * 
@@ -91,6 +74,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
              * 
              * Use $_GET[] will work!
              */
+
+            if ($_SESSION["exist"]) {
+                // If account exists
+                $_SESSION['msg'] = 'Wrong Password!';
+                $_SESSION['prefill'] = $_POST['email'];
+                header('Location: ' . $_SERVER['HTTP_REFERER']);
+            } else {
+                $_SESSION['msg'] = "Invalid Account!";
+                header('Location: ' . $_SERVER['HTTP_REFERER']);
+            }
+
         }
     }
 }

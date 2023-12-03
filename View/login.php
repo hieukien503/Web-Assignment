@@ -4,6 +4,17 @@ session_start();
 if (isset($_SESSION['login'])) {
   header("Location: index.php?page=home");
 }
+$msg = '';
+$prefill = '';
+if (isset($_SESSION["msg"])) {
+  $msg = $_SESSION["msg"];
+  $_SESSION["msg"] = '';
+}
+
+if (isset($_SESSION["prefill"])) {
+  $prefill = $_SESSION["prefill"];
+  $_SESSION["prefill"] = '';
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -20,8 +31,18 @@ if (isset($_SESSION['login'])) {
   <div id="signin" class="container text-center">
     <h1>Sign in</h1>
     <form id="form" method="post" action="./Model/login_processing.php" onsubmit="return validateForm()">
+      <?php
+      if ($msg != '') {
+        ?>
+        <div id="msg" class="alert alert-danger">
+          <?php echo $msg ?>
+        </div>
+        <?php
+      }
+      ?>
       <div class="input-icons">
-        <input type="text" placeholder="Email address" id="email" name="email" autocomplete="off" required>
+        <input type="text" placeholder="Email address" id="email" name="email" autocomplete="off"
+          value="<?php echo $prefill ?>" required>
         <i class="fa fa-envelope icon"></i>
       </div>
       <div id="invalid-mail" class="form-text" style="display: none; color: red;">Invalid Email</div>
@@ -37,7 +58,7 @@ if (isset($_SESSION['login'])) {
     </form>
   </div>
 </body>
-<!-- <script>
+<script>
   function validateForm() {
     let x = document.forms["form"]["email"].value;
     let mailformat = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
@@ -55,6 +76,6 @@ if (isset($_SESSION['login'])) {
       return false;
     };
   }
-</script> -->
+</script>
 
 </html>

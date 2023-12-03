@@ -10,9 +10,6 @@ ini_set('display_errors', '1');
  * Run this script only once. 
  * When done, comment out this script.
  */
-<<<<<<< HEAD
- include_once("Model/initDB.php");
-=======
 if (isset($_SESSION['initDB'])) {
     if ($_SESSION['initDB']) {
         include_once("Model/initDB.php");
@@ -20,7 +17,6 @@ if (isset($_SESSION['initDB'])) {
     }
 }
 
->>>>>>> 9448510d2a3d7f944975ef7539391a49fb926d08
 ?>
 
 <?php

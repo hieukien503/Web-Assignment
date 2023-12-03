@@ -14,7 +14,6 @@ if (isset($_SESSION["msg"])) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Register an account</title>
   <link rel="stylesheet" href="./View/register.css">
-  <script type="text/javascript" src="validate.js"></script>
 </head>
 
 <body>
@@ -46,7 +45,7 @@ if (isset($_SESSION["msg"])) {
   </div>
 </body>
 
-<!-- <script>
+<script>
   function validateForm() {
     let x = document.forms["form"]["email"].value;
     let mailformat = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
@@ -65,6 +64,6 @@ if (isset($_SESSION["msg"])) {
     };
   }
 
-</script> -->
+</script>
 
 </html>
