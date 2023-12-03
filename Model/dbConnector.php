@@ -16,7 +16,7 @@ class DatabaseConnector
          */
         $this->servername = "localhost";
         $this->username = "root";
-        $this->password = "1234";
+        $this->password = "";
         $this->dbname = "BOOKING_APPOINTMENT";
         $this->conn = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
     }
