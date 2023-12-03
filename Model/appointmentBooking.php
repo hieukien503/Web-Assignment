@@ -1,8 +1,9 @@
 <?php
 include("dbConnector.php");
+include("sendMail.php");
 
 session_start();
-function bookingAppointment($date,$timeslot)
+function bookingAppointment($date, $timeslot)
 { 
     global $DB_CONNECTOR;
     $sql3 = "SELECT * FROM appointment WHERE appointment_timeslot='$timeslot' AND appointment_date = '$date' AND appointment_status ='O' AND appointment_doctorID ='{$_SESSION['doctorID']}'";
@@ -16,17 +17,21 @@ function bookingAppointment($date,$timeslot)
     $result = $DB_CONNECTOR->query($sql);
     $result2 = $DB_CONNECTOR->query($sql2);
     $DB_CONNECTOR->disconnect();
-    return $result&&$result2;
+    return $result && $result2;
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['dateapp']) && isset($_POST['timeslot'])) {
         if (bookingAppointment($_POST['dateapp'], $_POST['timeslot'])) {
             $_SESSION['successful'] = true;
+            $doctorID = $_SESSION['doctorID'];
+            $patientID = $_SESSION['id'];
+            $patientInfo = $DB_CONNECTOR->query("SELECT fullName, email FROM users WHERE userID='$patientID'")->fetch_assoc();
+            $doctorInfo = $DB_CONNECTOR->query("SELECT fullName, email FROM users WHERE userID='$doctorID'")->fetch_assoc();
+            sendMail($patientInfo['email'], $patientInfo['fullName'], $doctorInfo['email'], $doctorInfo['fullName']);
             header("Location: ../index.php");
             exit();
         } else {
             echo '<script type="text/javascript">window.alert("You can not meet 2 doctor at a time!")</script>';
-            echo "notgood";
             $_SESSION['notgud'] = true;
             header("Location: ../index.php");
         }

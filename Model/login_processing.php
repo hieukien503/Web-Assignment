@@ -10,6 +10,7 @@ session_start();
 
 function loginVerification($email, $hashed_password)
 {
+
     // Use singleton DB_CONNECTOR from "dbConnector.php"
     global $DB_CONNECTOR;
 
@@ -18,6 +19,7 @@ function loginVerification($email, $hashed_password)
     if ($result->num_rows > 0) {
         // If account exists
 
+        $_SESSION["exist"] = true;
         $row = $result->fetch_assoc();
 
         if ($hashed_password === $row['password']) {
@@ -28,6 +30,7 @@ function loginVerification($email, $hashed_password)
         }
     }
 
+    $_SESSION["exist"] = false;
     $DB_CONNECTOR->disconnect();
     return false;
 }
@@ -58,20 +61,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['initDB'] = true;
             header("Location: ../index.php");
         } else {
-            echo "Wrong password.";
-            /**
-             * TO-DO: handle invalid account.
-             * 
-             * NKhoa suggests that an invalid message will be displayed next to 
-             * the original login window on login.php. It should not just have an alert box, its not good UI.
-             * 
-             * Also, when navigate back to the login page, user should have the username field filled already,
-             * they do not have to fill the login again.
-             * 
-             * And, fail cases of WRONG PASSWORD and INVALID ACCOUNT should be handled different (display different message).
-             * 
-             * Use $_GET[] will work!
-             */
+            // Prepare for email prefilling when heading back
+            $_SESSION['prefill'] = $_POST['email'];
+
+            if ($_SESSION["exist"]) {
+                // If account exists
+                $_SESSION['msg'] = 'Wrong Password!';
+            } else {
+                $_SESSION['msg'] = "Invalid Account!";
+            }
+
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
+
         }
     }
 }
