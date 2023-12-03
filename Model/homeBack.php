@@ -35,7 +35,7 @@ function checkExpire($slot)
     $dt = $currentTime->format("H:iA");
     return $dt >= $startTime;
 }
-
+// This function is to check the slot is set by that doctor or not
 function checkTime($ts, $dt)
 {
     global $DB_CONNECTOR;
@@ -49,6 +49,7 @@ function checkTime($ts, $dt)
     if ($result->num_rows > 0) return true;
     return false;
 }
+// This function is to check the slot is occupied by the patient user
 function checkMyappointment($ts, $dt)
 {
     global $DB_CONNECTOR;
@@ -62,6 +63,7 @@ function checkMyappointment($ts, $dt)
     if ($result->num_rows > 0) return true;
     return false;
 }
+// This function is to check the slot is occupied by the doctor user
 function checkMyappointment2($ts, $dt)
 {
     global $DB_CONNECTOR;
@@ -72,7 +74,7 @@ function checkMyappointment2($ts, $dt)
     if ($result->num_rows > 0) return true;
     return false;
 }
-// this function is to avoid checking null patientID
+// this function is to avoid checking null patientID, and check the occupied slot by the others
 function checkOccupiedAppointment($ts, $dt)
 {
     global $DB_CONNECTOR;
