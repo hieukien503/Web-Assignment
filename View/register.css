@@ -1,33 +1,27 @@
 @import url("https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css");
 @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css");
 
-body {
-    margin: 20vh 5vw 20vh 5vw;
-    background-image: url("background.jpg");
-    background-repeat: no-repeat;
-    background-size: 100vw 100vh;
-}
-
-#register {
-    background-color: white;
-    width: 40%;
-    border: 1px solid black;
-    min-height: auto;
-    text-align: center;
-    border-radius: 15px;
-}
-
 h3 {
     font-size: 24px;
     font-family: Arial, Helvetica, sans-serif;
-    font-weight: 600;
+    font-weight: 900;
     color: #84d9ba;
     padding-top: 3%;
 }
 
+body {
+    width: 100vw;
+    height: 100vh;
+    margin: auto;
+    padding: 5vw;
+    background-image: url("background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
 #fullname {
     border-radius: 30px;
-    width: 20vw;
+    width: 80%;
     margin: 10px 10px 10px 10px;
     background-color: transparent;
     border: 1px solid black;
@@ -36,7 +30,7 @@ h3 {
 
 #email {
     border-radius: 30px;
-    width: 20vw;
+    width: 80%;
     margin: 10px 10px 10px 10px;
     background-color: transparent;
     border: 1px solid black;
@@ -45,11 +39,22 @@ h3 {
 
 #passwrd {
     border-radius: 30px;
-    width: 20vw;
+    width: 80%;
     margin: 10px 10px 10px 10px;
     background-color: transparent;
     border: 1px solid black;
     text-indent: 5%;
+}
+
+#register-btn {
+    border-radius: 30px;
+    width: 20vw;
+    margin: 15px 10px 25px 10px;
+    border: 1px solid black;
+}
+
+#forget_pass {
+    color: black;
 }
 
 .input-icons i {
@@ -67,12 +72,16 @@ h3 {
 }
 
 .container {
-    height: 58vh;
+    height: 60vh;
 }
 
-#register-btn {
-    border-radius: 30px;
-    width: 20vw;
-    margin: 10px 10px 25px 10px;
+#register {
     border: 1px solid black;
+    background-color: white;
+    width: 80%;
+    max-width: 600px;
+    padding-bottom: 5vh;
+    height: fit-content;
+    text-align: center;
+    border-radius: 15px;
 }
