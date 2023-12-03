@@ -93,9 +93,9 @@ function getPatientName($ts, $dt)
 {
     global $DB_CONNECTOR;
     if (isset($_SESSION['doctorID'])){
-    $sql = "SELECT * FROM appointment WHERE appointment_timeslot='$ts' AND appointment_date = '$dt' AND appointment_doctorID = '{$_SESSION['doctorID']}'";
+    $sql = "SELECT * FROM appointment WHERE appointment_timeslot='$ts' AND appointment_date = '$dt' AND appointment_status = 'O' AND appointment_doctorID = '{$_SESSION['doctorID']}'";
     }else{
-        $sql = "SELECT * FROM appointment WHERE appointment_timeslot='$ts' AND appointment_date = '$dt'";
+        $sql = "SELECT * FROM appointment WHERE appointment_timeslot='$ts' AND appointment_date = '$dt' AND appointment_status = 'O'";
     }$result = $DB_CONNECTOR->query($sql);
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
