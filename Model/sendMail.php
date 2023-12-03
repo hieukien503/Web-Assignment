@@ -30,8 +30,6 @@ function sendMail($patient_email, $patient_name, $doctor_email, $doctor_name, $a
 
         $mail->setFrom($Server_Email, $Server_Name);
 
-        //vietnamkhoale@gmail.com
-        //$mail->addAddress('vietnamkhoale@gmail.com', $doctor_name);
         $mail->addAddress($patient_email, $patient_name);
 
         $mail->isHTML(true);
@@ -72,8 +70,8 @@ function sendMailforDoctor($patient_email, $patient_name, $doctor_email, $doctor
 
         $mail->setFrom($Server_Email, $Server_Name);
 
-        //$mail->addAddress($doctor_email, $doctor_name);
-        $mail->addAddress('vietnamkhoale@gmail.com', $doctor_name);
+        $mail->addAddress($doctor_email, $doctor_name);
+
         $mail->isHTML(true);
         $mail->Subject = 'Confirm your appointment on ' . $appoint_date . ' at ' . $appoint_timeslot . '.';
         // $mail->AltBody = 'Your appointment with ' . $doctor_name . 'has been scheduled';
@@ -148,8 +146,8 @@ function sendMailCancelforDoctor($patient_email, $patient_name, $doctor_email, $
 
         $mail->setFrom($Server_Email, $Server_Name);
 
-        //$mail->addAddress($doctor_email, $doctor_name);
-        $mail->addAddress('vietnamkhoale@gmail.com', $doctor_name);
+        $mail->addAddress($doctor_email, $doctor_name);
+        
         $mail->isHTML(true);
         $mail->Subject = 'Cancel your appointment on ' . $appoint_date . ' at ' . $appoint_timeslot . '!';
         // $mail->AltBody = 'Your appointment with ' . $doctor_name . 'has been scheduled';
