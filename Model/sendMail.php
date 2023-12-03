@@ -37,19 +37,19 @@ function sendMail($patient_email, $patient_name, $doctor_email, $doctor_name, $a
         $mail->isHTML(true);
         $mail->Subject = "Confirm your appointment on " . $appoint_date . " at " . $appoint_timeslot . ".";
         // $mail->AltBody = 'Your appointment with ' . $doctor_name . 'has been scheduled';
-        $mail->Body    = "Dear " . $patient_name . ",\r\n\r\n";
+        $mail->Body    = "Dear " . $patient_name . ",<br> <br>";
 
         // Provide more details about the appointment
-        $mail->Body   .= "Your appointment with " . $doctor_name . " has been scheduled. Here are the details:\r\n";
-        $mail->Body   .= "Date: " . $appoint_date . "\r\n";
-        $mail->Body   .= "Time: " . $appoint_timeslot . "\r\n";
-        $mail->Body   .= "Doctor: " . $doctor_name . "\r\n";
-        $mail->Body   .= "Location: 268 Ly Thuong Kiet, District 10, HCM city" . "\r\n";
-        $mail->Body   .= "\r\n";
+        $mail->Body   .= "Your appointment with " . $doctor_name . " has been scheduled. Here are the details:<br>";
+        $mail->Body   .= "Date: " . $appoint_date . "<br>";
+        $mail->Body   .= "Time: " . $appoint_timeslot . "<br>";
+        $mail->Body   .= "Doctor: " . $doctor_name . "<br>";
+        $mail->Body   .= "Location: 268 Ly Thuong Kiet, District 10, HCM city" . "<br>";
+        $mail->Body   .= "<br>";
         $mail->Body   .= "Please arrive 15 minutes before your appointment time. If you have any questions, ";
-        $mail->Body   .= "feel free to contact us at 113 ." . "\r\n\r\n";
-        $mail->Body   .= "Thank you for choosing our clinic. We look forward to providing you with excellent healthcare services." . "\r\n\r\n";
-        $mail->Body   .= "Best regards," . "\r\n";
+        $mail->Body   .= "feel free to contact us at 113 ." . "<br> <br>";
+        $mail->Body   .= "Thank you for choosing our clinic. We look forward to providing you with excellent healthcare services." . "<br> <br>";
+        $mail->Body   .= "Best regards," . "<br>";
         $mail->Body   .= "SOS Clinic";
         $mail->send();
     } catch (Exception $e) {
@@ -77,15 +77,15 @@ function sendMailforDoctor($patient_email, $patient_name, $doctor_email, $doctor
         $mail->isHTML(true);
         $mail->Subject = 'Confirm your appointment on ' . $appoint_date . ' at ' . $appoint_timeslot . '.';
         // $mail->AltBody = 'Your appointment with ' . $doctor_name . 'has been scheduled';
-        $mail->Body    = 'Dear ' . $doctor_name . ',' . "\r\n\r\n";
+        $mail->Body    = 'Dear ' . $doctor_name . ',' . "<br> <br>";
 
         // Provide more details about the appointment
-        $mail->Body   .= 'Your appointment with ' . $patient_name . ' has been scheduled. Here are the details:' . "\r\n";
-        $mail->Body   .= 'Date: ' . $appoint_date . "\r\n";
-        $mail->Body   .= 'Time: ' . $appoint_timeslot . "\r\n";
-        $mail->Body   .= 'Patient: ' . $patient_name . "\r\n";
-        $mail->Body   .= 'Please arrive 5 minutes before your appointment time'. "\r\n\r\n";
-        $mail->Body   .= 'Best regards,' . "\r\n";
+        $mail->Body   .= 'Your appointment with ' . $patient_name . ' has been scheduled. Here are the details:' . "<br>";
+        $mail->Body   .= 'Date: ' . $appoint_date . "<br>";
+        $mail->Body   .= 'Time: ' . $appoint_timeslot . "<br>";
+        $mail->Body   .= 'Patient: ' . $patient_name . "<br>";
+        $mail->Body   .= 'Please arrive 5 minutes before your appointment time'. "<br> <br>";
+        $mail->Body   .= 'Best regards,' . "<br>";
         $mail->Body   .= 'SOS Clinic';
         $mail->send();
     } catch (Exception $e) {
@@ -111,20 +111,20 @@ function sendMailCancelforPatient($patient_email, $patient_name, $doctor_email, 
         $mail->addAddress($patient_email, $patient_name);
 
         $mail->isHTML(true);
-        $mail->Subject = 'Cancelation on your appointment on ' . $appoint_date . ' at ' . $appoint_timeslot . '!';
+        $mail->Subject = 'Cancel your appointment on ' . $appoint_date . ' at ' . $appoint_timeslot . '!';
         // $mail->AltBody = 'Your appointment with ' . $doctor_name . 'has been scheduled';
-        $mail->Body    = 'Dear ' . $patient_name . ',' . '\r\n\r\n';
+        $mail->Body    = 'Dear ' . $patient_name . ',' . '<br> <br>';
 
         // Provide more details about the appointment
-        $mail->Body   .= 'Your appointment with ' . $doctor_name . ' has been cancelled due to ' . $doctor_name . ' has some busy work. Here are the details:' . "\r\n";
-        $mail->Body   .= 'Date: ' . $appoint_date . '\r\n';
-        $mail->Body   .= 'Time: ' . $appoint_timeslot . "\r\n";
-        $mail->Body   .= 'Doctor: ' . $doctor_name . "\r\n";
-        $mail->Body   .= 'Location: 268 Ly Thuong Kiet, District 10, HCM city' . "\r\n";
-        $mail->Body   .= "\r\n";
-        $mail->Body   .= 'We are very sorry to inform you that ! We hope that you can book another appointment on the website'. "\r\n\r\n";
-        $mail->Body   .= 'Thank you for reading our email. We look forward to providing you with another appointment on the website.' . "\r\n\r\n";
-        $mail->Body   .= 'Best regards,' . "\r\n";
+        $mail->Body   .= 'Your appointment with ' . $doctor_name . ' has been cancelled due to ' . $doctor_name . ' has some busy work. Here are the details:' . "<br>";
+        $mail->Body   .= 'Date: ' . $appoint_date . '<br>';
+        $mail->Body   .= 'Time: ' . $appoint_timeslot . "<br>";
+        $mail->Body   .= 'Doctor: ' . $doctor_name . "<br>";
+        $mail->Body   .= 'Location: 268 Ly Thuong Kiet, District 10, HCM city' . "<br>";
+        $mail->Body   .= "<br>";
+        $mail->Body   .= 'We are very sorry to inform you that ! We hope that you can book another appointment on the website'. "<br> <br>";
+        $mail->Body   .= 'Thank you for reading our email. We look forward to providing you with another appointment on the website.' . "<br> <br>";
+        $mail->Body   .= 'Best regards,' . "<br>";
         $mail->Body   .= 'SOS Clinic';
 
         $mail->send();
@@ -151,20 +151,20 @@ function sendMailCancelforDoctor($patient_email, $patient_name, $doctor_email, $
         //$mail->addAddress($doctor_email, $doctor_name);
         $mail->addAddress('vietnamkhoale@gmail.com', $doctor_name);
         $mail->isHTML(true);
-        $mail->Subject = 'Cancelation on your appointment on ' . $appoint_date . ' at ' . $appoint_timeslot . '!';
+        $mail->Subject = 'Cancel your appointment on ' . $appoint_date . ' at ' . $appoint_timeslot . '!';
         // $mail->AltBody = 'Your appointment with ' . $doctor_name . 'has been scheduled';
-        $mail->Body    = 'Dear ' . $doctor_email . ',' . "\r\n\r\n";
+        $mail->Body    = 'Dear ' . $doctor_name . ',' . "<br> <br>";
 
         // Provide more details about the appointment
-        $mail->Body   .= 'Your appointment with ' . $patient_name . ' has been cancelled due to his/her some busy work. Here are the details:' . "\r\n";
-        $mail->Body   .= 'Date: ' . $appoint_date . "\r\n";
-        $mail->Body   .= 'Time: ' . $appoint_timeslot . "\r\n";
-        $mail->Body   .= 'Patient: ' . $patient_name . "\r\n";
-        $mail->Body   .= 'Location: 268 Ly Thuong Kiet, District 10, HCM city' . "\r\n";
-        $mail->Body   .= "\r\n";
-        $mail->Body   .= 'We are very sorry to inform you that ! We hope that you will have a good day'. "\r\n\r\n";
-        $mail->Body   .= 'Thank you for reading our email!' . "\r\n\r\n";
-        $mail->Body   .= 'Best regards,' . "\r\n";
+        $mail->Body   .= 'Your appointment with ' . $patient_name . ' has been cancelled due to his/her some busy work. Here are the details:' . "<br>";
+        $mail->Body   .= 'Date: ' . $appoint_date . "<br>";
+        $mail->Body   .= 'Time: ' . $appoint_timeslot . "<br>";
+        $mail->Body   .= 'Patient: ' . $patient_name . "<br>";
+        $mail->Body   .= 'Location: 268 Ly Thuong Kiet, District 10, HCM city' . "<br>";
+        $mail->Body   .= "<br>";
+        $mail->Body   .= 'We are very sorry to inform you that ! We hope that you will have a good day'. "<br> <br>";
+        $mail->Body   .= 'Thank you for reading our email!' . "<br><br>";
+        $mail->Body   .= 'Best regards,' . "<br>";
         $mail->Body   .= 'SOS Clinic';
 
         $mail->send();
