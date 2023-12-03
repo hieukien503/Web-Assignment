@@ -9,19 +9,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $fullname = trim($_POST['fullname']);
         $email = trim($_POST['email']);
-        $password = trim($_POST['password']);
+        $password = trim($_POST['passwrd']);
 
-        if (empty($fullname) || empty($email) || empty($password)) {
-            $_SESSION['msg'] = 'All fields must be filled';
+        if (strlen($password) < 8) {
+            $_SESSION['msg'] = $password;
             header('Location: ' . $_SERVER['HTTP_REFERER']);
-        } else if (strlen($password) < 8) {
-            $_SESSION['msg'] = 'Password must be 8 characters or longer';
-            header('Location: ' . $_SERVER['HTTP_REFERER']);
-        } else if (!preg_match("/^[_.0-9a-zA-Z-]+@([0-9a-zA-Z][0-9a-zA-Z-]+.)+[a-zA-Z]{2,6}$/i", $email)) {
+        }
+        if (!preg_match("/^[_.0-9a-zA-Z-]+@([0-9a-zA-Z][0-9a-zA-Z-]+.)+[a-zA-Z]{2,6}$/i", $email)) {
             $_SESSION["msg"] = "Invalid Email";
             header('Location: ' . $_SERVER['HTTP_REFERER']);
-        } else
-            ;
+        }
 
         $hash_pwd = hash('sha512', $_POST['passwrd']);
         $sql = "SELECT * FROM users WHERE email = '$email'";
