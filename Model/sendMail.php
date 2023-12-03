@@ -1,4 +1,8 @@
 <?php
+include("../PHPMailer/src/PHPMailer.php");
+include("../PHPMailer/src/Exception.php");
+include("../PHPMailer/src/SMTP.php");
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
@@ -10,11 +14,12 @@ $SMTPPort = 465;
 $Server_Email = 'sosclinic368@gmail.com';
 $Server_Name  = 'SOSClinic';
 
-function sendMail($patient_email, $patient_name, $doctor_email, $doctor_name) {
+function sendMail($patient_email, $patient_name, $doctor_email, $doctor_name)
+{
     global $Host, $Username, $Password, $SMTPPort, $Server_Email, $Server_Name;
     $mail = new PHPMailer(true);
     try {
-        $mail->SMTPDebug = SMTP::DEBUG_SERVER;
+        //$mail->SMTPDebug = SMTP::DEBUG_SERVER;
         $mail->isSMTP();
         $mail->Host         = $Host;
         $mail->SMTPAuth     = true;
@@ -33,9 +38,7 @@ function sendMail($patient_email, $patient_name, $doctor_email, $doctor_name) {
         $mail->AltBody = 'Your appointment with ' . $doctor_name . 'has been scheduled';
 
         $mail->send();
-
     } catch (Exception $e) {
         echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
     }
 }
-?>

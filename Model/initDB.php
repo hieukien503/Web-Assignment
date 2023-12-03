@@ -62,7 +62,7 @@ $init_db = new InitDatabase();
 
 // Add a few doctors
 $init_db->addAccount('Dr. Kien', 'kien.le123@hcmut.edu.vn', 'byebyebyebyebye', 1);
-$init_db->addAccount('Dr. Jackson', 'jack@gmail.com', '12345678', 1);
+$init_db->addAccount('Dr. Khuong', 'jack@gmail.com', '12345678', 1);
 $init_db->addAccount('Dr. Steve', 'khoa.lesteve@hcmut.edu.com', '12345678', 1);
 
 // Add a few patients

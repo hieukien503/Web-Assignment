@@ -16,7 +16,6 @@ function bookingAppointment($date, $timeslot)
     $sql2   = "UPDATE appointment SET appointment_patientID = '{$_SESSION['id']}' WHERE appointment_timeslot='$timeslot' AND appointment_date = '$date' AND appointment_doctorID ='{$_SESSION['doctorID']}'";
     $result = $DB_CONNECTOR->query($sql);
     $result2 = $DB_CONNECTOR->query($sql2);
-    $DB_CONNECTOR->disconnect();
     return $result && $result2;
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

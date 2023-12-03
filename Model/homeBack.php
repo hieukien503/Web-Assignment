@@ -56,7 +56,7 @@ function checkMyappointment($ts, $dt)
     if (isset($_SESSION['doctorID'])){
     $sql = "SELECT * FROM appointment WHERE appointment_timeslot='$ts' AND appointment_date = '$dt' AND appointment_status ='O' AND appointment_patientID ='{$_SESSION['id']}' AND appointment_doctorID = '{$_SESSION['doctorID']}'";}
     else{
-    include("initDB.php");
+    //include("initDB.php");
     $sql = "SELECT * FROM appointment WHERE appointment_timeslot='$ts' AND appointment_date = '$dt' AND appointment_status ='O' AND appointment_patientID ='{$_SESSION['id']}'";
     }
     $result = $DB_CONNECTOR->query($sql);
@@ -69,7 +69,7 @@ function checkMyappointment2($ts, $dt)
 {
     global $DB_CONNECTOR;
 
-    include("initDB.php");
+    //include("initDB.php");
     $sql = "SELECT * FROM appointment WHERE appointment_timeslot='$ts' AND appointment_date = '$dt' AND appointment_status ='O' AND appointment_doctorID ='{$_SESSION['id']}'";
     $result = $DB_CONNECTOR->query($sql);
 
@@ -88,9 +88,9 @@ function checkOccupiedAppointment($ts, $dt)
     }
     $result = $DB_CONNECTOR->query($sql);
 
-    include("initDB.php");
+    //include("initDB.php");
     $sql = "SELECT * FROM appointment WHERE appointment_timeslot='$ts' AND appointment_date = '$dt' AND appointment_status ='O'";
-    $result = $conn->query($sql);
+    $result = $DB_CONNECTOR->query($sql);
     if ($result->num_rows > 0) return true;
     return false;
 }
@@ -103,9 +103,9 @@ function getPatientName($ts, $dt)
     }else{
         $sql = "SELECT * FROM appointment WHERE appointment_timeslot='$ts' AND appointment_date = '$dt'";
     }$result = $DB_CONNECTOR->query($sql);
-    include("initDB.php");
+    //include("initDB.php");
     $sql = "SELECT * FROM appointment WHERE appointment_timeslot='$ts' AND appointment_date = '$dt'";
-    $result = $conn->query($sql);
+    $result = $DB_CONNECTOR->query($sql);
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
         $sql2 = "SELECT * FROM users WHERE userID='{$row['appointment_patientID']}'";
